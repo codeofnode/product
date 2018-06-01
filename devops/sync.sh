@@ -37,7 +37,8 @@ filter_branches(){
 }
 
 filter_branches "*-dev"
-echo "Dev Tools are : ${list_brs[*]}\n"
+echo "Dev Tools are : ${list_brs[*]}"
+echo
 
 TOOL=product
 BRANCH=dev
