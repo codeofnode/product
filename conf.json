@@ -33,7 +33,6 @@
     "path": "{{srcDir}}/{{module.dirName}}",
     "prefix": "{{name}}-",
     "dependencies": {
-      "json2server" : 0
     }
   },
   "homepage": "{{org.url}}/codeofnode/{{name}}"

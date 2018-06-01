@@ -1,5 +1,11 @@
 set -e
 
+DRYRUN=1
+
+if [ "$1" == "send" ]; then
+  DRYRUN=
+fi
+
 if [[ -n $(git status -s) ]]; then
   echo "There are uncommitted files. Aborting!!!"
   exit 1
@@ -55,10 +61,15 @@ parent_branch() {
 par_br=$(parent_branch)
 
 merge_me(){
-	git merge $1
-  npm test
-  npm run build
-  npm run prodtest
+  if [ "$DRYRUN" == "" ]; then
+    git merge $1
+    npm test
+    npm run build
+    npm run prodtest
+  else
+    local cr=$(current_branch)
+    echo "===> Branch $cr will be merged into $1"
+  fi
 }
 
 merge_peers(){
