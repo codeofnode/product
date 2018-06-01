@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2017-08-12
-### Added
+### Changed
   - Changed the structure of utilities
   - Using this utility in javascript also changed
 
