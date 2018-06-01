@@ -9,6 +9,6 @@ if [[ $# < 3 ]]; then
 fi
 
 git checkout master
-node ./ct.js "$1" "$2" "$3"
+node ./devops/ct.js "$1" "$2" "$3"
 git checkout -b "$1"
 git status
