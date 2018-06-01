@@ -7,5 +7,5 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Created the project
 
-  [Unreleased]: https://github.com/codeofnode/product/compare/0.0.0...HEAD
-  [0.0.0]: https://github.com/codeofnode/product/compare/0.0.0...0.0.0
+  [Unreleased]: https://github.com/codeofnode/product/compare/v0...HEAD
+  [0.0.0]: https://github.com/codeofnode/product/compare/v0...v0

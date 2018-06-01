@@ -1,9 +1,14 @@
 set -e
 
 DRYRUN=1
+TOTEST=1
 
 if [ "$1" == "send" ]; then
   DRYRUN=
+fi
+
+if [ "$2" == "notest" ]; then
+  TOTEST=
 fi
 
 if [[ -n $(git status -s) ]]; then
@@ -63,9 +68,11 @@ par_br=$(parent_branch)
 merge_me(){
   if [ "$DRYRUN" == "" ]; then
     git merge $1
-    npm test
-    npm run build
-    npm run prodtest
+    if [ "$TOTEST" == "1" ]; then
+      npm test
+      npm run build
+      npm run prodtest
+    fi
   else
     local cr=$(current_branch)
     echo "===> Branch $cr will be merged into $1"
@@ -136,4 +143,4 @@ fi
 
 echo
 [[ "${saved_branch}" != "$(current_branch)" ]] && git checkout "${saved_branch}"
-#git push origin --all
+git push origin --all
