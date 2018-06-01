@@ -1,0 +1,40 @@
+{
+  "name": "product",
+  "version": "0.0.0",
+  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "git":{
+    "owner": "codeofnode",
+    "hostedOn": "github.com",
+    "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
+  },
+  "keywords": [
+    "server",
+    "config",
+    "lightweight",
+    "product",
+    "lifecycle",
+    "oop",
+    "modular",
+    "json"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Ramesh Kumar",
+    "email": "codeofnode@gmail.com"
+  },
+  "org": {
+    "domain": "github.com",
+    "scheme": "https",
+    "url": "{{org.scheme}}://{{org.domain}}"
+  },
+  "srcDir": "src",
+  "module": {
+    "dirName": "modules",
+    "path": "{{srcDir}}/{{module.dirName}}",
+    "prefix": "{{name}}-",
+    "dependencies": {
+      "json2server" : 0
+    }
+  },
+  "homepage": "{{org.url}}/codeofnode/{{name}}"
+}

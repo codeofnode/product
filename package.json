@@ -1,0 +1,98 @@
+{
+  "name": "product",
+  "version": "0.0.0",
+  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "scripts": {
+    "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json $*\"",
+    "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build $*",
+    "prodtest": "npm test -- -v sutDir:dist",
+    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -b test $*",
+    "all": "npm run lint && npm test && npm run build && npm run prodtest && npm run docs",
+    "docs": "mkdir -p dist &&./node_modules/.bin/jsdoc -c .jsdoc.json",
+    "lint": "./node_modules/.bin/eslint src",
+    "struct": "npm start -- --struct",
+    "preinstall": "node scripts/preinstall.js",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/codeofnode/product.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Ramesh Kumar",
+    "email": "codeofnode@gmail.com"
+  },
+  "keywords": [
+    "server",
+    "config",
+    "lightweight",
+    "product",
+    "lifecycle",
+    "oop",
+    "modular",
+    "json"
+  ],
+  "homepage": "https://github.com/codeofnode/product",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-istanbul": "^4.1.6",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.1.6",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "istanbul": "^0.4.5",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
+    "mongodb": "^3.1.0-beta4",
+    "mv": "^2.1.1",
+    "nodemon": "^1.17.5",
+    "nyc": "^11.8.0",
+    "rimraf": "^2.6.2"
+  },
+  "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
+  "babel": {
+    "plugins": [
+      "transform-async-to-generator",
+      "transform-runtime"
+    ],
+    "presets": [
+      "stage-2",
+      [
+        "env",
+        {
+          "targets": {
+            "node": "8"
+          }
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0"
+  }
+}
