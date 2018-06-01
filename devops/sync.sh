@@ -76,7 +76,7 @@ merge_me(){
     fi
   else
     local cr=$(current_branch)
-    echo "===> Branch $cr will be merged into $1"
+    echo "===> Branch $1 will be merged into $cr"
   fi
 }
 
