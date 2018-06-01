@@ -2,7 +2,7 @@
   "name": "product",
   "version": "0.0.0",
   "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
-  "git":{
+  "git": {
     "owner": "codeofnode",
     "hostedOn": "github.com",
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
@@ -32,8 +32,7 @@
     "dirName": "modules",
     "path": "{{srcDir}}/{{module.dirName}}",
     "prefix": "{{name}}-",
-    "dependencies": {
-    }
+    "dependencies": {}
   },
   "homepage": "{{org.url}}/codeofnode/{{name}}"
 }
