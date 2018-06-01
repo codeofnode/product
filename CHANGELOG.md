@@ -1,11 +1,15 @@
 # changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-
-## [0.0.0] - 2018-06-01
+## [1.0.0] - 2017-08-12
 ### Added
-- Created and initialized the project
+  - Changed the structure of utilities
+  - Using this utility in javascript also changed
 
-  [Unreleased]: https://github.com/codeofnode/product/compare/petu-v0...petu-dev
-  [0.0.0]: https://github.com/codeofnode/product/compare/petu-v0...petu-v0
+## [0.0.0] - 2015-12-02
+### Added
+  - Initialized the project on npm
+
+    [Unreleased]: https://github.com/codeofnode/product/compare/petu-v1...petu-dev
+    [1.0.0]: https://www.npmjs.com/package/petu/v/1.0.0
+    [0.0.0]: https://www.npmjs.com/package/petu/v/0.0.1
