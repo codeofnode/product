@@ -1,7 +1,7 @@
 {
-  "name": "product",
-  "version": "0.0.0",
-  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "name": "petu",
+  "version": "1.1.0",
+  "description": "It is a simple collection of pure javascript utilities to cut your lines of code.",
   "scripts": {
     "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json $*\"",
     "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build $*",
@@ -24,16 +24,13 @@
     "email": "codeofnode@gmail.com"
   },
   "keywords": [
-    "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "purejs",
+    "util",
+    "json",
+    "lib",
+    "javascript"
   ],
-  "homepage": "https://github.com/codeofnode/product",
+  "homepage": "https://github.com/codeofnode/petu/tree/petu",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-istanbul": "^4.1.6",
