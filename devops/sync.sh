@@ -143,4 +143,6 @@ fi
 
 echo
 [[ "${saved_branch}" != "$(current_branch)" ]] && git checkout "${saved_branch}"
-git push origin --all
+if [ "$DRYRUN" == "" ]; then
+  git push origin --all
+fi
