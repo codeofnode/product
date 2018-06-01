@@ -39,4 +39,4 @@ conf.keywords = tags;
 conf.homepage = conf.homepage.split('{{name}}');
 conf.homepage[1] = conf.homepage[1] = `/tree/${tool}`;
 conf.homepage = conf.homepage.join('{{name}}');
-writeFileSync('./conf.json', JSON.stringify(conf, null, 2));
+writeFileSync('./conf.json', JSON.stringify(conf, null, 2)+'\n');
