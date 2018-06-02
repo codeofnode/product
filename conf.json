@@ -1,18 +1,21 @@
 {
-  "name": "petu",
+  "name": "product",
   "version": "0.0.0",
-  "description": "It is a simple collection of pure javascript utilities to cut your lines of code.",
+  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
   "git": {
     "owner": "codeofnode",
     "hostedOn": "github.com",
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
   },
   "keywords": [
-    "purejs",
-    "util",
-    "json",
-    "lib",
-    "javascript"
+    "server",
+    "config",
+    "lightweight",
+    "product",
+    "lifecycle",
+    "oop",
+    "modular",
+    "json"
   ],
   "license": "MIT",
   "author": {
@@ -31,5 +34,5 @@
     "prefix": "{{name}}-",
     "dependencies": {}
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}/tree/petu"
+  "homepage": "{{org.url}}/codeofnode/{{name}}"
 }

@@ -1,2 +1,2 @@
-# petu
-It is a simple collection of pure javascript utilities to cut your lines of code.
+# product
+A product life-cycle development boilerplate, with modular and object oriented approach.
