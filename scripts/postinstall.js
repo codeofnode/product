@@ -7,7 +7,11 @@ const pkg = require('../package.json');
 let conf = require('./conf');
 if (!conf.module || typeof conf.module.dependencies !== 'object') return;
 
-function resolveDeps(deps, ind, cb) {
+const deps = Object.entries(conf.module.dependencies)
+
+if (!deps.length) return;
+
+function resolveDeps(ind, cb) {
   if (ind === deps.length) return cb();
   const [ky, vl] = deps[ind];
   exec(`git checkout ${ky}-v${vl}`);
@@ -21,14 +25,14 @@ function resolveDeps(deps, ind, cb) {
         symlink(`node_modules/.bin/${bk}`, `node_modules/${conf.module.prefix}${ky}/${bv}`)
       }
     }
-    resolveDeps(deps, ind + 1);
+    resolveDeps(ind + 1, cb);
   });
 }
 
 const stdout = exec('git rev-parse --abbrev-ref HEAD').toString().trim();
 const [ l ] = stdout.split('-');
 if (l === conf.name) {
-  resolveDeps(Object.entries(conf.module.dependencies), 0, () => {
+  resolveDeps(0, () => {
     exec(`git checkout ${stdout}`);
   });
 }

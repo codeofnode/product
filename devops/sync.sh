@@ -130,8 +130,8 @@ elif [ "$TOOL" == "product" ] && [ "$BRANCH" == "dev" ]; then
     cv=$(current_version)
     merge_me dev
     tl=${peer::-4}
-    sep = "-"
-    sep2 = "-"
+    sep="-"
+    sep2="-"
     git checkout ${tl}${sep}v${cv};
     merge_me ${peer}
     merge_peers "${tl}${sep}v${cv}${sep2}*" ${tl}${sep}v${cv}
