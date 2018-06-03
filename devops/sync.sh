@@ -4,15 +4,15 @@ TOMERGE=
 TOTEST=1
 TOPUSH=
 
-if [[ "$1" == "*m*" ]]; then
+if [[ $1 == *m* ]]; then
   TOMERGE=1
 fi
 
-if [[ "$1" == "*p*" ]]; then
+if [[ $1 == *p* ]]; then
   TOTEST=
 fi
 
-if [[ "$1" == "*s*" ]]; then
+if [[ $1 == *s* ]]; then
   TOPUSH=1
 fi
 
