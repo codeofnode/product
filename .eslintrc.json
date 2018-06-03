@@ -3,12 +3,18 @@
     "es6": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "airbnb-base"],
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
+  ],
   "plugins": [
     "babel"
   ],
+  "parser": "babel-eslint",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": false
   },
   "globals": {
     "AppImport": true
