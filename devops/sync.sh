@@ -1,18 +1,18 @@
 set -e
 
-DRYRUN=
+TOMERGE=
 TOTEST=1
 TOPUSH=
 
-if [[ "$1" == "*d*" ]]; then
-  DRYRUN=1
+if [[ $1 == "*m*" ]]; then
+  TOMERGE=1
 fi
 
-if [[ "$1" == "*p*" ]]; then
+if [[ $1 == "*p*" ]]; then
   TOTEST=
 fi
 
-if [[ "$1" == "*s*" ]]; then
+if [[ $1 == "*s*" ]]; then
   TOPUSH=1
 fi
 
@@ -72,7 +72,7 @@ parent_branch() {
 par_br=$(parent_branch)
 
 merge_me(){
-  if [ "$DRYRUN" == "" ]; then
+  if [ "$TOMERGE" == "" ]; then
     git merge $1
     if [ "$TOTEST" == "1" ]; then
       npm test
@@ -149,6 +149,6 @@ fi
 
 echo
 [[ "${saved_branch}" != "$(current_branch)" ]] && git checkout "${saved_branch}"
-if [ "$TOPUSH" == "1" ] && [ "$DRYRUN" == "" ]; then
+if [ "$TOPUSH" == "1" ] && [ "$TOMERGE" == "1" ]; then
   git push origin --all
 fi
