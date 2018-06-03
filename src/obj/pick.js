@@ -10,7 +10,7 @@ class Picker {
    * @param {...Object} props - n number of properties as arguments
    * @return {Object} the new object created
    */
-  static pick (o, ...props) {
+  static pick(o, ...props) {
     return Object.assign({}, ...props.map(prop => ({ [prop]: o[prop] })));
   }
 }

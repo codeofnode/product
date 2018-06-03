@@ -13,7 +13,7 @@ class StringCroper {
    */
   static crop(str, len) {
     const st = stringify(str);
-    return (st.length > ln) ?  `${st.substring(0, ln-4)}...` : st;
+    return (st.length > ln) ? `${st.substring(0, ln - 4)}...` : st;
   }
 }
 

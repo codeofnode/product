@@ -10,7 +10,6 @@ let REP_KEY = '$rep';
  */
 
 class DeepExtender {
-
   /**
    * the delete key - if found, that value must be removed from root. whether its array or object
    * @example

@@ -14,7 +14,7 @@ class Stringifier {
       if (typeof st === 'object') {
         try {
           st = pretty ? JSON.stringify(st, null, 2) : JSON.stringify(st);
-        } catch(er) {
+        } catch (er) {
           st = String(st);
         }
       } else {
