@@ -72,7 +72,7 @@ parent_branch() {
 par_br=$(parent_branch)
 
 merge_me(){
-  if [ "$TOMERGE" == "" ]; then
+  if [ "$TOMERGE" == "1" ]; then
     git merge $1
     if [ "$TOTEST" == "1" ]; then
       npm test
