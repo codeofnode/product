@@ -72,6 +72,8 @@ parent_branch() {
 par_br=$(parent_branch)
 
 merge_me(){
+  local cr=$(current_branch)
+  printf "====> %20s" "$cr" && echo " += $1"
   if [ "$TOMERGE" == "1" ]; then
     git merge $1
     if [ "$TOTEST" == "1" ]; then
@@ -79,9 +81,6 @@ merge_me(){
       npm run build
       npm run prodtest
     fi
-  else
-    local cr=$(current_branch)
-    printf "====> %20s" "$cr" && echo " += $1"
   fi
 }
 
