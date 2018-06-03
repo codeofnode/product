@@ -5,10 +5,13 @@ import { join } from 'path';
  * @module petu
  */
 
-const files = fs.readdirSync(join(__dirname)).filter(file => (!file.startsWith('.') && file.endsWith('.js')));
+const secs = fs.readdirSync(join(__dirname))
+  .filter(sec => (!sec.startsWith('.') && !sec.endsWith('.js')));
 
-files.forEach((file) => {
-  exports[file.slice(0, -3)] =
-    require(join(__dirname, file)) // eslint-disable-line import/no-dynamic-require,global-require
-      .default;
+secs.forEach((sec) => {
+  exports[sec] =
+    require(join(__dirname, sec)); // eslint-disable-line import/no-dynamic-require,global-require
+  Object.entries(exports[sec]).forEach(([ky, vl]) => {
+    exports[ky] = vl;
+  });
 });
