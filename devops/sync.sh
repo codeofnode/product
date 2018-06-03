@@ -52,24 +52,20 @@ current_version() {
   node -e "console.log(require('./scripts/conf').version.split('.').shift())"
 }
 
-parent_branch() {
-  local name=$(node -e "console.log(require('./scripts/conf').name)")
-  local version=$(current_version)
-  if [ "$name" == "product" ]; then
-    if git show-ref --quiet refs/heads/v$((version + 1)); then
-      BRANCH=master
-    fi
-    echo v$version
-  else
-    TOOL=$name
-    if git show-ref --quiet "refs/heads/${name}-v$((version + 1))"; then
-      BRANCH=master
-    fi
-    echo "${name}-v${version}"
+name=$(node -e "console.log(require('./scripts/conf').name)")
+version=$(current_version)
+if [ "$name" == "product" ]; then
+  if git show-ref --quiet refs/heads/v$((version + 1)); then
+    BRANCH=master
   fi
-}
-
-par_br=$(parent_branch)
+  par_br=v$version
+else
+  TOOL=$name
+  if git show-ref --quiet "refs/heads/${name}-v$((version + 1))"; then
+    BRANCH=master
+  fi
+  par_br="${name}-v${version}"
+fi
 
 merge_me(){
   local cr=$(current_branch)
