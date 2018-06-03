@@ -59,3 +59,13 @@ typings/
 
 # next.js build output
 .next
+
+# custom dist dir
+dist/
+
+# build docs dir
+docs/
+
+# test report and coverage
+.nyc_output/
+coverage/

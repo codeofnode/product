@@ -1,14 +1,19 @@
 set -e
 
-DRYRUN=1
+DRYRUN=
 TOTEST=1
+TOPUSH=
 
-if [ "$1" == "send" ]; then
-  DRYRUN=
+if [[ "$1" == "*d*" ]]; then
+  DRYRUN=1
 fi
 
-if [ "$2" == "notest" ]; then
+if [[ "$1" == "*p*" ]]; then
   TOTEST=
+fi
+
+if [[ "$1" == "*s*" ]]; then
+  TOPUSH=1
 fi
 
 if [[ -n $(git status -s) ]]; then
@@ -76,7 +81,7 @@ merge_me(){
     fi
   else
     local cr=$(current_branch)
-    echo "===> Branch $1 will be merged into $cr"
+    printf "====> %20s" "$cr" && echo " += $1"
   fi
 }
 
@@ -144,6 +149,6 @@ fi
 
 echo
 [[ "${saved_branch}" != "$(current_branch)" ]] && git checkout "${saved_branch}"
-if [ "$DRYRUN" == "" ]; then
+if [ "$TOPUSH" == "1" ] && [ "$DRYRUN" == "" ]; then
   git push origin --all
 fi
