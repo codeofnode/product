@@ -8,11 +8,14 @@
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
   },
   "keywords": [
-    "purejs",
-    "util",
-    "json",
-    "lib",
-    "javascript"
+    "server",
+    "config",
+    "lightweight",
+    "product",
+    "lifecycle",
+    "oop",
+    "modular",
+    "json"
   ],
   "license": "MIT",
   "author": {

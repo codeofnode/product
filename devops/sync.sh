@@ -1,14 +1,19 @@
 set -e
 
-DRYRUN=1
+TOMERGE=
 TOTEST=1
+TOPUSH=
 
-if [ "$1" == "send" ]; then
-  DRYRUN=
+if [[ $1 == *m* ]]; then
+  TOMERGE=1
 fi
 
-if [ "$2" == "notest" ]; then
+if [[ $1 == *p* ]]; then
   TOTEST=
+fi
+
+if [[ $1 == *s* ]]; then
+  TOPUSH=1
 fi
 
 if [[ -n $(git status -s) ]]; then
@@ -67,7 +72,7 @@ parent_branch() {
 par_br=$(parent_branch)
 
 merge_me(){
-  if [ "$DRYRUN" == "" ]; then
+  if [ "$TOMERGE" == "1" ]; then
     git merge $1
     if [ "$TOTEST" == "1" ]; then
       npm test
@@ -76,7 +81,7 @@ merge_me(){
     fi
   else
     local cr=$(current_branch)
-    echo "===> Branch $1 will be merged into $cr"
+    printf "====> %20s" "$cr" && echo " += $1"
   fi
 }
 
@@ -130,8 +135,8 @@ elif [ "$TOOL" == "product" ] && [ "$BRANCH" == "dev" ]; then
     cv=$(current_version)
     merge_me dev
     tl=${peer::-4}
-    sep = "-"
-    sep2 = "-"
+    sep="-"
+    sep2="-"
     git checkout ${tl}${sep}v${cv};
     merge_me ${peer}
     merge_peers "${tl}${sep}v${cv}${sep2}*" ${tl}${sep}v${cv}
@@ -144,6 +149,6 @@ fi
 
 echo
 [[ "${saved_branch}" != "$(current_branch)" ]] && git checkout "${saved_branch}"
-if [ "$DRYRUN" == "" ]; then
+if [ "$TOPUSH" == "1" ] && [ "$TOMERGE" == "1" ]; then
   git push origin --all
 fi
