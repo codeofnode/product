@@ -11,7 +11,7 @@ class DelayBoy {
    */
   static delay(interval) {
     return new Promise((res) => {
-      setTimeout(res, interval);
+      setTimeout(res, interval * 1000);
     });
   }
 }
