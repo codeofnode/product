@@ -2,10 +2,8 @@
  * @module assigner
  */
 
-const baseTypes = ['string', 'number', 'boolean', 'undefined'];
-
 class Assigner {
-  static baseTypes = baseTypes;
+  static baseTypes = ['string', 'number', 'boolean', 'undefined'];
 
   /**
    * Update one object given the another patch object.
@@ -23,8 +21,8 @@ class Assigner {
       const kys = Object.keys(up);
       const kl = kys.length;
       for (let j = 0; j < kl; j++) {
-        if (noob !== true || (baseTypes.indexOf(typeof inpt[kys[j]]) !== -1)
-            || (baseTypes.indexOf(typeof up[kys[j]]) !== -1)) {
+        if (noob !== true || (Assigner.baseTypes.indexOf(typeof inpt[kys[j]]) !== -1)
+            || (Assigner.baseTypes.indexOf(typeof up[kys[j]]) !== -1)) {
           inpt[kys[j]] = up[kys[j]];
         }
       }
