@@ -33,6 +33,7 @@
   "homepage": "https://github.com/codeofnode/petu/tree/petu",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -67,10 +68,12 @@
   "babel": {
     "plugins": [
       "transform-async-to-generator",
+      "transform-class-properties",
       "transform-runtime"
     ],
     "presets": [
-      "stage-2", [
+      "stage-2",
+      [
         "env",
         {
           "targets": {
