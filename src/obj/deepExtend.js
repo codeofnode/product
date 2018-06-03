@@ -1,6 +1,5 @@
 
-import isNoPOJO from './isNoPOJO';
-import cloneNoPOJO from './cloneNoPOJO';
+import { clone as cloneBuiltIn, isBuiltIn } from '../builtin/builtin';
 
 let DEL_KEY = '$del';
 let REP_KEY = '$rep';
@@ -83,8 +82,8 @@ class DeepExtender {
       } else if (typeof item === 'object') {
         if (Array.isArray(item)) {
           clone[on] = DeepExtender.deepCloneArray(item, def[defi] && def[defi]);
-        } else if (isNoPOJO(item)) {
-          clone[on] = cloneNoPOJO(item);
+        } else if (isBuiltIn(item)) {
+          clone[on] = cloneBuiltIn(item);
         } else {
           clone[on] = DeepExtender.deepExtend(Array.isArray(def) && typeof def[defi] === 'object' ? def[defi] : {}, item);
         }
@@ -160,8 +159,8 @@ class DeepExtender {
           }
 
         // custom cloning and overwrite for specific objects
-        } else if (isNoPOJO(val)) {
-          target[key] = cloneNoPOJO(val);
+        } else if (isBuiltIn(val)) {
+          target[key] = cloneBuiltIn(val);
 
         // overwrite by new value if source isn't object or array
         } else if (typeof src !== 'object' || src === null || Array.isArray(src)) {

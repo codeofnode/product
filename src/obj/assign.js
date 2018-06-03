@@ -2,7 +2,7 @@
  * @module assigner
  */
 
-const baseTypes = ['string','number','boolean','undefined'];
+const baseTypes = ['string', 'number', 'boolean', 'undefined'];
 
 class Assigner {
   static baseTypes = baseTypes;
@@ -38,9 +38,9 @@ class Assigner {
    * @return {Object} the new assigned updated object
    */
   static assign(...args) {
-    const ln = args.length;
-    const noob = args[ln-1];
-    if (noob === true) ln--;
+    let ln = args.length;
+    let noob = args[ln - 1];
+    if (noob === true) ln -= 1;
     else noob = false;
     const no = Assigner.copyProperties(args[0], args[1], noob);
     for (let j = 2; j < ln; j++) {

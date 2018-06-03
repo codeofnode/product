@@ -11,9 +11,9 @@ class StringCroper {
    * @param {Number} [len=100] - length of final string
    * @return {String} the new cropped string
    */
-  static crop(str, len) {
+  static crop(str, len = 100) {
     const st = stringify(str);
-    return (st.length > ln) ? `${st.substring(0, ln - 4)}...` : st;
+    return (st.length > len) ? `${st.substring(0, len - 4)}...` : st;
   }
 }
 

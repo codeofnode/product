@@ -3,7 +3,6 @@
  */
 
 class LastMan {
-
   /**
    * Fill up the empty blocks up to request path
    * @param {Object} inp - input main object
@@ -11,12 +10,13 @@ class LastMan {
    * @return {Object} the modified filled object
    */
   static fillToLast(...args) {
-    const len = args.length, now = args[0];
-    for (let z =1; z<len; z++){
+    const len = args.length;
+    let now = args[0];
+    for (let z = 1; z < len; z++) {
       if (!LastMan.getProp(now[args[z]])) {
         now[args[z]] = {};
       }
-      root = now = now[args[z]];
+      now = now[args[z]];
     }
     return now;
   }
@@ -37,15 +37,18 @@ class LastMan {
    * Very usefull aginst we need to write && multiples time,
    *   just to prevent the `Cannot read property x of undefined`
    *
-   * @param {...Object|String} args - n number of arguments, first one should be object
+   * @param {...Object|String} argmnts - n number of arguments, first one should be object
    * @return {*} the deeper value at the request path
    */
-  static lastValue(...args) {
-    const len, now, moveWith, firstArgArray = args[1];
+  static lastValue(...argmnts) {
+    let len;
+    let now;
+    let moveWith;
+    let args = argmnts;
     let root = args[0];
-    if (args.length === 2 && firstArgArray === true && Array.isArray(root)) {
+    if (args.length === 2 && args[1] === true && Array.isArray(root)) {
       args = root;
-      root = args[0];
+      [root] = args;
     }
     len = args.length;
     now = root;
@@ -53,13 +56,13 @@ class LastMan {
     if (len < 1) return undefined;
     if (len === 1) return root;
     const func = args[len - 1];
-    if (typeof func === 'function'){
-      len--;
+    if (typeof func === 'function') {
+      len -= 1;
       moveWith = func;
     }
-    for (let z =1; z<len; z++) {
-      now = moveWith(root,args[z]);
-      if (now === undefined){
+    for (let z = 1; z < len; z++) {
+      now = moveWith(root, args[z]);
+      if (now === undefined) {
         break;
       } else {
         root = now;

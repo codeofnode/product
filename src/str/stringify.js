@@ -10,6 +10,7 @@ class Stringifier {
    * @return {String} the new stringified string
    */
   static stringify(inp, pretty = false) {
+    let st = inp;
     if (typeof st !== 'string') {
       if (typeof st === 'object') {
         try {
