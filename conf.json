@@ -8,14 +8,11 @@
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
   },
   "keywords": [
-    "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "purejs",
+    "util",
+    "json",
+    "lib",
+    "javascript"
   ],
   "license": "MIT",
   "author": {
@@ -34,5 +31,5 @@
     "prefix": "{{name}}-",
     "dependencies": {}
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}/tree/petu"
+  "homepage": "{{org.url}}/codeofnode/{{name}}/tree/{{name}}"
 }
