@@ -96,5 +96,8 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0"
+  },
+  "config": {
+    "modulePrefix": "product-"
   }
 }
