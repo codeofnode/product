@@ -12,4 +12,4 @@ const secIndexStr = readFileSync('./src/section.js').toString();
 
 secs.forEach(sec => writeFileSync(`./dist/${sec}/index.js`, secIndexStr));
 
-writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2));
+writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2)+'\n');
