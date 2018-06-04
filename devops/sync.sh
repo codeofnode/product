@@ -71,7 +71,7 @@ merge_me(){
   local cr=$(current_branch)
   printf "====> %20s" "$cr" && echo " += $1"
   if [ "$TOMERGE" == "1" ]; then
-    git merge --no-edit $1
+    git merge --no-edit $1 || echo "<<<<<< ===== Some conflict or error in merging ===== >>>>>>"
     if [ "$TOTEST" == "1" ]; then
       npm test
       npm run build
