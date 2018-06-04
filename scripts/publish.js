@@ -9,7 +9,7 @@ delete pkg.config;
 
 
 if (conf.module && typeof conf.module.dependencies === 'object') {
-  const baseBr = exec('git symbolic-ref --short HEAD');
+  const baseBr = exec('git symbolic-ref --short HEAD').toString().trim();
   const dps = Object.enteries(conf.module.dependencies);
   for (let z = 0; z < dps.length; z++) {
     exec(`git checkout ${ky}-v${vl}`);
