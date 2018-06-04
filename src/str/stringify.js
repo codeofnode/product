@@ -2,6 +2,10 @@
  * @module stringifier
  */
 
+/**
+  * The Stringifier class
+  * @class
+  */
 class Stringifier {
   /**
    * Stringify anything

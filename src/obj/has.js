@@ -3,6 +3,10 @@
  * @module hasIt
  */
 
+/**
+  * Has it class
+  * @class
+  */
 class HasIt {
   /**
    * whether a value contains a string as property or not

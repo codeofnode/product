@@ -2,6 +2,10 @@
  * @module assigner
  */
 
+/**
+  * The assigner class
+  * @class
+  */
 class Assigner {
   static baseTypes = ['string', 'number', 'boolean', 'undefined'];
 

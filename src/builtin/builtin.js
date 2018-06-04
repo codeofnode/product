@@ -3,6 +3,10 @@
  * @module builtin
  */
 
+/**
+  * The builtin class, which contains methods for js builtin methods
+  * @class
+  */
 class BuiltIn {
   /**
    * if a builtin

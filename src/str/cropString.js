@@ -4,6 +4,10 @@ import stringify from './stringify';
  * @module stringCroper
  */
 
+/**
+  * String cropper class
+  * @class
+  */
 class StringCroper {
   /**
    * Crop a string

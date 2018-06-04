@@ -2,6 +2,10 @@
  * @module lastMan
  */
 
+/**
+  * The Last man class
+  * @class
+  */
 class LastMan {
   /**
    * Fill up the empty blocks up to request path

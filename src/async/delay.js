@@ -3,6 +3,10 @@
  * @module delayBoy
  */
 
+/**
+  * The delay boy class
+  * @class
+  */
 class DelayBoy {
   /**
    * Pause the execution in async way

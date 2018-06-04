@@ -5,6 +5,10 @@ import { isDict } from './pojo';
  * @module walker
  */
 
+/**
+  * The walker class
+  * @class
+  */
 class Walker {
   static MaxObjDepth = 99;
   static EndVar = '$W_END';

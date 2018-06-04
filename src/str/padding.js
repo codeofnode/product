@@ -2,6 +2,10 @@
  * @module padder
  */
 
+/**
+  * The padder class
+  * @class
+  */
 class Padder {
   /**
    * Pads a string

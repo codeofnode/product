@@ -4,6 +4,10 @@ import { join, isAbsolute } from 'path';
  * @module pathResolver
  */
 
+/**
+  * The Path resolver class
+  * @class
+  */
 class PathResolver {
   /**
    * Resolves the path

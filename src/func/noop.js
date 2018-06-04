@@ -3,6 +3,10 @@
  * @module noop
  */
 
+/**
+  * The no operation class
+  * @class
+  */
 class NoOp {
   /**
    * Does no operation

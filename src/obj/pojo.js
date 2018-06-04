@@ -6,6 +6,10 @@
 const ProtoObj = Object.prototype;
 const getProtOf = Object.getPrototypeOf;
 
+/**
+  * The pojo class
+  * @class
+  */
 class Pojo {
   /**
    * find if the argument is pojo or not

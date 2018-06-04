@@ -3,6 +3,10 @@
  * @module picker
  */
 
+/**
+  * The picker class
+  * @class
+  */
 class Picker {
   /**
    * Pick a set of keys from source to create a new one

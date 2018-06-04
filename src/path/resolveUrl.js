@@ -1,8 +1,12 @@
 /**
- * @module pathResolver
+ * @module urlResolver
  */
 
-class PathResolver {
+/**
+  * Resolve path url class
+  * @class
+  */
+class UrlResolver {
   /**
    * Resolves the url slash either at rear or at front
    * @param {String} st - the input string
@@ -29,5 +33,5 @@ class PathResolver {
   }
 }
 
-export default PathResolver.resolve;
-export { PathResolver };
+export default UrlResolver.resolve;
+export { UrlResolver };

@@ -29,6 +29,10 @@ const generateMethodRegex = (startVar, endVar) =>
 const START_VAR = '{{';
 const END_VAR = '}}';
 
+/**
+  * The Templist class
+  * @class
+  */
 class Templist {
   static startVar = START_VAR;
   static endVar = END_VAR;
