@@ -1,21 +1,20 @@
 {
-  "name": "product",
-  "version": "0.0.0",
-  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "name": "allrounder",
+  "version": "0.5.5",
+  "description": "It validate everything. From rest call to dbvalidation to system commands to unit tests. Just almost everything.",
   "git": {
     "owner": "codeofnode",
     "hostedOn": "github.com",
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
   },
   "keywords": [
-    "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "rest",
+    "unit",
+    "test",
+    "json",
+    "db",
+    "system",
+    "upload"
   ],
   "license": "MIT",
   "author": {
@@ -34,5 +33,5 @@
     "prefix": "{{name}}-",
     "dependencies": {}
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}"
+  "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }
