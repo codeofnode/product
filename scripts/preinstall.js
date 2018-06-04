@@ -2,7 +2,7 @@ const fs = require('fs');
 const pkg = require('../package.json');
 let conf = require('./conf');
 
-['name', 'version', 'description', 'license', 'author', 'keywords', 'homepage'].forEach((key) => {
+['name', 'version', 'description', 'license', 'author', 'keywords', 'homepage', 'config'].forEach((key) => {
   pkg[key] = conf[key]
 });
 

@@ -29,5 +29,8 @@
     "prefix": "product-",
     "dependencies": {}
   },
+  "config": {
+    "modulePrefix": "{{module.prefix}}"
+  },
   "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }
