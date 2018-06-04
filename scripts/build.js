@@ -28,8 +28,8 @@ if (isServer) {
     rimrafSync(`dist/${ky}`);
   });
 
-  writeFileSync('dist/server.json', JSON.stringify(serverJson, null, 2));
-  writeFileSync('dist/vars.json', JSON.stringify(varsJson, null, 2));
+  writeFileSync('dist/server.json', JSON.stringify(serverJson, null, 2)+'\n');
+  writeFileSync('dist/vars.json', JSON.stringify(varsJson, null, 2)+'\n');
 }
 
-writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2));
+writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2)+'\n');
