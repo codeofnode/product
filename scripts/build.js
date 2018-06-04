@@ -6,7 +6,8 @@ delete pkg.scripts;
 delete pkg.nyc;
 delete pkg.babel;
 
-const secs = readdirSync('./src').filter(sec => (!sec.startsWith('.') && !sec.endsWith('.js')));
+const secs = readdirSync('./src')
+  .filter(sec => (!sec.startsWith('.') && !sec.endsWith('.json') && !sec.endsWith('.js')));
 const secIndexStr = readFileSync('./src/section.js').toString();
 
 secs.forEach(sec => writeFileSync(`./dist/${sec}/index.js`, secIndexStr));
