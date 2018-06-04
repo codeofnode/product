@@ -136,6 +136,9 @@ elif [ "$TOOL" == "product" ] && [ "$BRANCH" == "dev" ]; then
     merge_me ${peer}
     merge_peers "${tl}${sep}v${cv}${sep2}*" ${tl}${sep}v${cv}
   done
+  if [[ $1 == *-t-* ]]; then
+    common_master master
+  fi
 elif [ "$TOOL" != "product" ] && [ "$BRANCH" == "master" ]; then
   common_master $TOOL
 elif [ "$TOOL" == "product" ] && [ "$BRANCH" == "master" ]; then
