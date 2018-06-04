@@ -31,5 +31,5 @@
     "prefix": "{{name}}-",
     "dependencies": {}
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}/tree/{{name}}"
+  "homepage": "{{org.url}}/codeofnode/product/tree/petu"
 }
