@@ -30,7 +30,7 @@
   "module": {
     "dirName": "modules",
     "path": "{{srcDir}}/{{module.dirName}}",
-    "prefix": "{{name}}-",
+    "prefix": "product-",
     "dependencies": {}
   },
   "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
