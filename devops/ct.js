@@ -33,10 +33,10 @@ const nChSt = chStr.slice(0,4)
   }));
 writeFileSync('./CHANGELOG.md', nChSt.join('\n'));
 
-conf.name = tool;
 conf.description = desc;
 conf.keywords = tags;
 conf.homepage = conf.homepage.split('{{name}}');
-conf.homepage[1] = conf.homepage[1] = `/tree/${tool}`;
-conf.homepage = conf.homepage.join('{{name}}');
+conf.homepage[1] = conf.homepage[1] = `/tree/{{name}}`;
+conf.homepage = conf.homepage.join(conf.name);
+conf.name = tool;
 writeFileSync('./conf.json', JSON.stringify(conf, null, 2)+'\n');

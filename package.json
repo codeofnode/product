@@ -3,13 +3,13 @@
   "version": "1.1.0",
   "description": "It is a simple collection of pure javascript utilities to cut your lines of code.",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json $*\"",
-    "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build $*",
+    "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json\"",
+    "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build",
     "prodtest": "npm test -- -v sutDir:dist",
-    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -b test $*",
+    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -b test",
     "all": "npm run lint && npm test && npm run build && npm run prodtest && npm run docs",
     "docs": "mkdir -p dist &&./node_modules/.bin/jsdoc -c .jsdoc.json",
-    "lint": "./node_modules/.bin/eslint src",
+    "lint": "./node_modules/.bin/eslint --fix src",
     "struct": "npm start -- --struct",
     "preinstall": "node scripts/preinstall.js",
     "postinstall": "node scripts/postinstall.js"
@@ -33,14 +33,17 @@
   "homepage": "https://github.com/codeofnode/petu/tree/petu",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "cross-env": "^5.1.6",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-import": "^2.12.0",
     "istanbul": "^0.4.5",
     "jsdoc": "^3.5.5",
@@ -65,6 +68,7 @@
   "babel": {
     "plugins": [
       "transform-async-to-generator",
+      "transform-class-properties",
       "transform-runtime"
     ],
     "presets": [

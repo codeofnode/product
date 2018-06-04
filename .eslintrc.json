@@ -3,22 +3,45 @@
     "es6": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "airbnb-base"],
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
+  ],
+  "plugins": [
+    "babel"
+  ],
+  "parser": "babel-eslint",
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": false
   },
   "globals": {
     "AppImport": true
   },
   "rules": {
+    "babel/new-cap": 1,
+    "babel/no-invalid-this": 1,
+    "babel/semi": 1,
+    "babel/no-unused-expressions": 1,
     "indent": [
       "error",
       2,
-      {"SwitchCase": 1}
+      {
+        "SwitchCase": 1
+      }
     ],
-    "no-nested-ternary":"off",
-    "no-underscore-dangle":[
-      "error", { "allow" : [ "_id" ] }
+    "no-nested-ternary": "off",
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "no-underscore-dangle": [
+      "error", {
+        "allow": ["_id"]
+      }
     ],
     "linebreak-style": [
       "error",
