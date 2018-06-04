@@ -1,6 +1,6 @@
 {
   "name": "json2server",
-  "version": "0.1.28",
+  "version": "1.0.0",
   "description": "Provide a json to ready a server. It has routes, validations and more.",
   "git": {
     "owner": "codeofnode",
@@ -27,7 +27,9 @@
     "dirName": "modules",
     "path": "{{srcDir}}/{{module.dirName}}",
     "prefix": "{{name}}-",
-    "dependencies": {}
+    "dependencies": {
+      "petu": 1
+    }
   },
   "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }
