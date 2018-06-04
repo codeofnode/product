@@ -68,6 +68,7 @@ src/package.json
 
 # custom dist dir
 dist/
+publish/
 
 # build docs dir
 docs/
