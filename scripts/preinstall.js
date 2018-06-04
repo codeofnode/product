@@ -9,3 +9,9 @@ let conf = require('./conf');
 pkg.repository.url = pkg.repository.url.replace('{{git.url}}', conf.git.url);
 
 fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+try {
+  fs.mkdirSync('./src');
+} catch (er) {
+  // no error
+}
+fs.writeFileSync('./src/package.json', JSON.stringify(pkg, null, 2));
