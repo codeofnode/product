@@ -30,7 +30,7 @@
     "lib",
     "javascript"
   ],
-  "homepage": "https://github.com/codeofnode/petu/tree/petu",
+  "homepage": "https://github.com/codeofnode/product/tree/petu",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
