@@ -11,7 +11,7 @@ const tool = args[0];
 const desc = args[1];
 const tags = args[2].split(',').map(ab => ab.trim()).filter(ab => ab.length);
 
-writeFileSync('./README.md', `# ${tool}\n${desc}`)
+writeFileSync('./README.md', `# ${tool}\n${desc}\n`)
 
 const chStr = readFileSync('./CHANGELOG.md').toString().split('\n');
 const nChSt = chStr.slice(0,4)
@@ -31,7 +31,7 @@ const nChSt = chStr.slice(0,4)
       return st;
     }
   }));
-writeFileSync('./CHANGELOG.md', nChSt.join('\n'));
+writeFileSync('./CHANGELOG.md', nChSt.join('\n')+'\n');
 
 conf.description = desc;
 conf.keywords = tags;
