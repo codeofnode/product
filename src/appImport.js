@@ -18,7 +18,6 @@ class Manager {
     this.modulePrefix = modulePrefix;
   }
 
-
   /**
    * initialize or loads a module
    * @param {String} mod - name of the module
@@ -27,11 +26,12 @@ class Manager {
    */
   load(mod, ...opts) {
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    let ToRet = require(`${this.modulePrefix}/${mod}`);
+    let ToRet = require(`${this.modulePrefix}${mod}`);
     if (opts.length) ToRet = new ToRet(...opts);
     return ToRet;
   }
 }
 
-export default (new Manager(pkg.name));
-export { Manager };
+const manager = (new Manager((pkg.config && pkg.config.modulePrefix) || ''));
+global.AppImport = manager.load.bind(manager);
+export default Manager;
