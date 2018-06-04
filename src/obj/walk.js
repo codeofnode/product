@@ -2,7 +2,7 @@
 import { isDict } from './pojo';
 
 /**
- * @module Walker
+ * @module walker
  */
 
 class Walker {

@@ -23,7 +23,7 @@ const generateMethodRegex = (startVar, endVar) =>
 
 
 /**
- * @module Templist
+ * @module templist
  */
 
 const START_VAR = '{{';
@@ -296,7 +296,7 @@ class Templist {
   /**
    * extract parameters from method call variable
    * @param {String} str - the input string containing method call
-   * @return {*[]} array of parameters extracted
+   * @return {*} array of parameters extracted
    */
   static extractParameters(str) {
     const ar = [];
@@ -335,7 +335,7 @@ class Templist {
    * Extacts base description and pass to extract parameters engine
    * @param {String} methodDec - the method description
    * @param {String} methodName - the method name linked
-   * @return {*[]} array of parameters extracted
+   * @return {*} array of parameters extracted
    */
   static extractMethodParams(methodDec, methodName) {
     const baseDec = methodDec.substring(
@@ -348,7 +348,7 @@ class Templist {
   /**
    * Invokes a method for the function call in method variable
    * @param {Function} method - the function to be called
-   * @param {*[]} params - array of parameters
+   * @param {*} params - array of parameters
    * @param {String} methodName - the method name to be found in methods map
    * @param {Object} methodsMap - the methods map used to find the method name
    * @return {*} the value found from method call
