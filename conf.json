@@ -34,5 +34,8 @@
     "prefix": "product-",
     "dependencies": {}
   },
+  "config": {
+    "modulePrefix": "{{module.prefix}}"
+  },
   "homepage": "{{org.url}}/codeofnode/{{name}}"
 }
