@@ -1,4 +1,3 @@
-const util = require('util');
 const exec = require('child_process').execSync;
 const mv = require('mv');
 const symlink = require('fs').symlinkSync;
