@@ -20,4 +20,4 @@ if (conf.module && typeof conf.module.dependencies === 'object') {
 }
 
 
-writeFileSync('./publish/package.json', JSON.stringify(pkg, null, 2));
+writeFileSync('./publish/package.json', JSON.stringify(pkg, null, 2)+'\n');
