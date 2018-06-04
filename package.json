@@ -1,6 +1,6 @@
 {
   "name": "petu",
-  "version": "0.0.11",
+  "version": "1.1.0",
   "description": "It is a simple collection of pure javascript utilities to cut your lines of code.",
   "scripts": {
     "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json\"",
