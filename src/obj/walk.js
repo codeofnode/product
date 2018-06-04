@@ -1,5 +1,5 @@
 
-import isPojo from './pojo';
+import { isDict } from './pojo';
 
 /**
  * @module Walker
@@ -18,7 +18,7 @@ class Walker {
   static ifEndForObjWalk(obj, depth) {
     return ((depth < Walker.MaxObjDepth && typeof obj === 'object'
       && obj !== null && obj[Walker.EndVar] !== true
-      && (Array.isArray(obj) || !isPojo(obj))) ? obj : false);
+      && isDict(obj)) ? obj : false);
   }
 
   /**
@@ -31,7 +31,7 @@ class Walker {
    * @param {Boolean} isLast - whether the key is last key of object
    * @return {Object} the modified or original object
    */
-  static objwalk(fun, rt, obj, key, depth = 0, isLast) {
+  static walk(fun, rt, obj, key, depth = 0, isLast) {
     fun(obj, key, rt, depth, typeof isLast === 'boolean' ? isLast : true);
     const ob = Walker.ifEndForObjWalk(obj, depth);
     if (ob) {
@@ -45,5 +45,5 @@ class Walker {
   }
 }
 
-export default Walker.pick;
+export default Walker.walk;
 export { Walker };
