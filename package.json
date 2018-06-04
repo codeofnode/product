@@ -1,6 +1,6 @@
 {
   "name": "allrounder",
-  "version": "0.5.5",
+  "version": "1.0.0",
   "description": "It validate everything. From rest call to dbvalidation to system commands to unit tests. Just almost everything.",
   "scripts": {
     "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json\"",
