@@ -1,7 +1,7 @@
 {
-  "name": "product",
-  "version": "0.0.0",
-  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "name": "json2server",
+  "version": "0.1.28",
+  "description": "Provide a json to ready a server. It has routes, validations and more.",
   "git": {
     "owner": "codeofnode",
     "hostedOn": "github.com",
@@ -9,13 +9,8 @@
   },
   "keywords": [
     "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "json",
+    "routes"
   ],
   "license": "MIT",
   "author": {
@@ -34,5 +29,5 @@
     "prefix": "{{name}}-",
     "dependencies": {}
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}"
+  "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }

@@ -1,2 +1,2 @@
-# product
-A product life-cycle development boilerplate, with modular and object oriented approach.
+# json2server
+Provide a json to ready a server. It has routes, validations and more.

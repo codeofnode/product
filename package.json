@@ -1,7 +1,7 @@
 {
-  "name": "product",
-  "version": "0.0.0",
-  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "name": "json2server",
+  "version": "0.1.28",
+  "description": "Provide a json to ready a server. It has routes, validations and more.",
   "scripts": {
     "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json\"",
     "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build",
@@ -25,15 +25,10 @@
   },
   "keywords": [
     "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "json",
+    "routes"
   ],
-  "homepage": "https://github.com/codeofnode/product",
+  "homepage": "https://github.com/codeofnode/product/tree/json2server",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",

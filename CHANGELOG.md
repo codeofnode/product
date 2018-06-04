@@ -1,11 +1,24 @@
-# changelog
+# Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.1.28]  - 2018-02-03
+### Changed
+  - Replace method fixes
 
-## [0.0.0] - 2018-06-01
+
+## [0.1.0]  - 2017-04-29
+### Changed
+  - Arguments changes
+
 ### Added
-- Created the project
+  - Executing mock requests on the routes
 
-  [Unreleased]: https://github.com/codeofnode/product/compare/v0...HEAD
-  [0.0.0]: https://github.com/codeofnode/product/compare/v0...v0
+
+## [0.0.1]  - 2017-03-23
+### Added
+  - Created and initialized the project
+
+
+  - [0.1.28]: https://www.npmjs.com/package/json2server/v/0.1.28
+  - [0.1.0]: https://www.npmjs.com/package/json2server/v/0.1.0
+  - [0.0.0]: https://www.npmjs.com/package/json2server/v/0.0.1
