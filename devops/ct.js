@@ -13,25 +13,8 @@ const tags = args[2].split(',').map(ab => ab.trim()).filter(ab => ab.length);
 
 writeFileSync('./README.md', `# ${tool}\n${desc}\n`)
 
-const chStr = readFileSync('./CHANGELOG.md').toString().split('\n');
-const nChSt = chStr.slice(0,4)
-  .concat([
-    '',
-    `## [0.0.0] - ${(new Date()).toJSON().slice(0, 10)}`,
-    '### Added', '- Created and initialized the project',
-    '',
-  ])
-  .concat(chStr.slice(-3).map((st, ind) => {
-    if (ind < 2) {
-      const ar = st.split('/');
-      const ln = ar.length;
-      ar[ln-1] = `${tool}-v0...${tool}-${ind ? 'v0' : 'dev'}`;
-      return ar.join('/');
-    } else {
-      return st;
-    }
-  }));
-writeFileSync('./CHANGELOG.md', nChSt.join('\n')+'\n');
+const chStr = readFileSync('./CHANGELOG.md').toString().split('v0').join(`${tool}-v0`).split('HEAD').join(`${tool}-dev`);
+writeFileSync('./CHANGELOG.md', chStr);
 
 conf.description = desc;
 conf.keywords = tags;
