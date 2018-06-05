@@ -5,9 +5,6 @@ import { ReadStream } from 'fs';
 import { warn } from './logger';
 
 const { isDict } = appImport('petu/obj/pojo').Pojo;
-const hasOwn = appImport('petu/obj/has');
-const pick = appImport('petu/obj/pick');
-const noop = appImport('petu/func/noop');
 const stringify = appImport('petu/str/stringify');
 
 /**
@@ -40,14 +37,13 @@ class Request {
 
   /**
    * Create an instance of request
-   * @param {Object|String} opts - options for request or string as url
+   * @param {Object|String} options - options for request or string as url
    */
-  constructor(opts) {
+  constructor(options) {
     let url;
     let method;
     let payload;
     let headers;
-    let parser;
     let payloadStream;
     let multipartOptions;
     let passOnNon200;
@@ -62,8 +58,6 @@ class Request {
       throw new RequestError('INVALID_ARGUMENT');
     }
 
-    parser = typeof options.parser === 'function' ? options.parser : JSON.parse;
-
     if (typeof url !== 'string' || !url.length) throw new RequestError('URL_NOT_FOUND');
     if (typeof method !== 'string' || !method.length) throw new RequestError('METHOD_NOT_FOUND');
     method = method.toUpperCase();
@@ -73,7 +67,7 @@ class Request {
     this.payloadStream = payloadStream;
     this.passOnNon200 = passOnNon200;
     this.multipartOptions = multipartOptions;
-    this.parser = parser;
+    this.parser = typeof options.parser === 'function' ? options.parser : JSON.parse;
     this.urlObject = this.getUrlObject(url, method, headers);
   }
 
@@ -83,7 +77,7 @@ class Request {
    * @param {Function} reject - reject the request in case of any error
    */
   prepareRequest(resolve, reject) {
-    this.req.once('error', rej);
+    this.req.once('error', reject);
     if (this.payload instanceof ReadStream) {
       const mo = isDict(this.multipartOptions) ? this.multipartOptions : {};
       if (!mo.boundaryKey) {
@@ -93,7 +87,7 @@ class Request {
       if (mo.contentLength) {
         this.req.setHeader('content-length', mo.contentLength);
       }
-      if (isObject(mo.formData)) {
+      if (isDict(mo.formData)) {
         Object.keys(mo.formData).forEach((formKey) => {
           const formValue = mo.formData[formKey];
           this.req.write(`------${mo.boundaryKey}\r\nContent-Disposition: form-data; name="${formKey}"\r\n\r\n${formValue}\r\n`);
@@ -109,9 +103,9 @@ class Request {
         this.req.setHeader('content-type', 'application/json');
       }
       if (!this.contLenFound) {
-        this.req.setHeader('content-length', Buffer.byteLength(payload));
+        this.req.setHeader('content-length', Buffer.byteLength(this.payload));
       }
-      this.req.end(payload);
+      this.req.end(this.payload);
     } else {
       this.req.end();
     }
@@ -135,8 +129,10 @@ class Request {
       this.req = (obj.protocol === 'https:' ? HttpsRequest : HttpRequest)(obj, (res) => {
         let resContent = '';
         res.setEncoding('utf8');
-        res.on('data', chunk => resContent += chunk);
-        const respond = (res, resolve, reject) => {
+        res.on('data', (chunk) => {
+          resContent += chunk;
+        });
+        const respond = () => {
           const toSend = {
             statusCode: res.statusCode,
             headers: res.headers,
@@ -177,11 +173,11 @@ class Request {
       const hds = Object.keys(headers);
       const hdsln = hds.length;
       for (let z = 0; z < hdsln; z++) {
-        if (key.toLowerCase() === 'content-type') {
+        if (hds[z].toLowerCase() === 'content-type') {
           this.contFound = true;
           if (this.contLenFound) break;
         }
-        if (key.toLowerCase() === 'content-length') {
+        if (hds[z].toLowerCase() === 'content-length') {
           this.contLenFound = true;
           if (this.contFound) break;
         }

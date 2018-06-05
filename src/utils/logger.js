@@ -1,5 +1,4 @@
 /* eslint no-console:0 */
-import pkg from '../package.json';
 
 /**
  * @module Logger
@@ -46,7 +45,7 @@ class Logger {
   }
 }
 
-const logLevel = pkg.config && pkg.config.logLevel;
+let logLevel = process.env.J2S_LOG_LEVEL;
 if (logLevel === undefined) logLevel = 2;
 const logger = new Logger(logLevel);
 
