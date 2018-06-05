@@ -17,7 +17,7 @@
     "codeFrame": false
   },
   "globals": {
-    "AppImport": true
+    "appImport": true
   },
   "rules": {
     "babel/new-cap": 1,
