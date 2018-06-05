@@ -32,7 +32,8 @@
     }
   },
   "config": {
-    "modulePrefix": "{{module.prefix}}"
+    "modulePrefix": "{{module.prefix}}",
+    "reqVarsKey": "j2s"
   },
   "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }
