@@ -1,21 +1,20 @@
 {
-  "name": "product",
+  "name": "unit-tc-gen",
   "version": "0.0.0",
-  "description": "A product life-cycle development boilerplate, with modular and object oriented approach.",
+  "description": "A unit test case generator. It will intercept the methods of class and save the input and out to file.",
   "git": {
     "owner": "codeofnode",
     "hostedOn": "github.com",
     "url": "git@{{git.hostedOn}}/{{git.owner}}/{{name}}.git"
   },
   "keywords": [
-    "server",
-    "config",
-    "lightweight",
-    "product",
-    "lifecycle",
-    "oop",
-    "modular",
-    "json"
+    "unit",
+    "testcase",
+    "interceptor",
+    "class",
+    "file",
+    "method",
+    "function"
   ],
   "license": "MIT",
   "author": {
@@ -37,5 +36,5 @@
   "config": {
     "modulePrefix": "{{module.prefix}}"
   },
-  "homepage": "{{org.url}}/codeofnode/{{name}}"
+  "homepage": "{{org.url}}/codeofnode/product/tree/{{name}}"
 }
