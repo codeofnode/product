@@ -33,7 +33,7 @@
     "method",
     "function"
   ],
-  "homepage": "https://github.com/codeofnode/product/tree/unit-tc-gen",
+  "homepage": "https://github.com/codeofnode/product/tree/tcgen",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
