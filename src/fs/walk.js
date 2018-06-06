@@ -11,11 +11,13 @@ import { join } from 'path';
   */
 class Walker {
   /* Whether to add absolute path
+   * @member {Boolean}
    * @static
    */
   static absolute = true;
 
   /* All files will be captured so returning true for all
+   * @member {String|Function}
    * @static
    */
   static extension = () => true;
@@ -27,7 +29,9 @@ class Walker {
    * @param {Boolean} [absolute=true] - whether to capture absolute path
    */
   constructor(absolute = Walker.absolute, extension = Walker.extension) {
+    /** @member {String|Function} */
     this.extension = extension;
+    /** @member {Boolean} */
     this.absolute = absolute;
   }
 

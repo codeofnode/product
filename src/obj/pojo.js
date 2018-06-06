@@ -14,6 +14,7 @@ const getProtOf = Object.getPrototypeOf;
 class Pojo {
   /*
    * The basic types that can be considered as primitive
+   * @member {String[]}
    * @static
    */
   static baseTypes = ['string', 'number', 'boolean'];

@@ -11,8 +11,8 @@ import { Pojo } from './pojo';
 class Assigner {
   /*
    * The basic types that can be considered as primitive
+   * @member {String[]}
    * @static
-   *
    */
   static baseTypes = Pojo.baseTypes;
 

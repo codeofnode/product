@@ -32,26 +32,31 @@ const generateMethodRegex = (startVar, endVar) =>
   */
 class Templist {
   /* the start variable pattern
+   * @member {String}
    * @static
    */
   static startVar = '{{';
 
   /* the end variable pattern
+   * @member {String}
    * @static
    */
   static endVar = '}}';
 
   /* the function key, that will ask to call the linked method
+   * @member {String}
    * @static
    */
   static funcKey = '@';
 
   /* the debug function, helpful to debug if something went wrong with method call
+   * @member {Function}
    * @static
    */
   static debugFunc = noop;
 
   /* what data to be sent in case of any error
+   * @member {String}
    * @static
    */
   static valOnMethodError = 'METHOD_ERROR';
@@ -77,9 +82,13 @@ class Templist {
       debugFunc: Templist.debugFunc,
       valOnMethodError: Templist.valOnMethodError,
     }, opts);
+    /** @member {Number} */
     this.svarLen = this.startVar.length;
+    /** @member {Number} */
     this.evarLen = this.endVar.length;
+    /** @member {RegEx} */
     this.varRegex = generateVarRegex(this.startVar, this.endVar);
+    /** @member {RegEx} */
     this.functionRegex = generateMethodRegex(this.startVar, this.endVar);
   }
 
