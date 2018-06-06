@@ -75,14 +75,13 @@ class FileLogger {
       require: inInstance,
       request: {
         payload: inputParams,
-        construct
+        construct,
         method,
       },
       output,
     }, null, 2);
     this.writer.write(`\n${str}`);
   }
-
 }
 
 export default FileLogger;

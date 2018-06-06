@@ -1,5 +1,5 @@
 import { mkdirSync } from 'fs';
-import { join, basename, sep } from 'path';
+import { join, sep } from 'path';
 import { tmpdir } from 'os';
 import { name } from './package.json';
 import { Logger } from './logger';
@@ -35,6 +35,7 @@ class Generator {
     const op = resolvePath(outPath);
     const outDirName = sp.split(sep).slice(-3).join('-');
     this.outDirPath = join(op, outDirName);
+    this.noClassFiles = noClassFiles;
     try {
       mkdirSync(op);
       mkdirSync(this.outDirPath);
@@ -68,20 +69,21 @@ class Generator {
    * @return {Function} the new function that will be used
    */
   static handleFunctionUnderTest(sLogger, ent, prop, isConstructor = false) {
-    const applyArgs = [prop, isConstructor, Generator.clonePrimitive(ent), args];
-    const executor = new Executor(ent, prop, (err, ...data) => {
-      if (err) {
-        applyArgs.push({ error: Generator.clonePrimitive(err) });
-      } else {
-        applyArgs.push({ output: Generator.clonePrimitive(data.length > 1 ? data : data[0]) });
-      }
-      sLogger.apply(sLogger, applyArgs);
-    }, isConstructor);
+    const applyArgs = [prop, isConstructor, Generator.clonePrimitive(ent)];
     /**
      * This becomes the original function
      * @param {...*} args - the arguments passed to be function
      */
-    return function (...args) {
+    return function mainCall(...args) {
+      applyArgs.push(args.map(Generator.clonePrimitive));
+      const executor = new Executor(ent, prop, (err, ...data) => {
+        if (err) {
+          applyArgs.push({ error: Generator.clonePrimitive(err) });
+        } else {
+          applyArgs.push({ output: Generator.clonePrimitive(data.length > 1 ? data : data[0]) });
+        }
+        sLogger.apply(sLogger, applyArgs);
+      }, isConstructor);
       executor.exec(...args);
       return executor.returnValue;
     };
@@ -95,12 +97,13 @@ class Generator {
       // eslint-disable-next-line global-require, import/no-dynamic-require
       const loaded = require(fl);
       if (typeof loaded === 'object') {
-        Object.entries(loaded).forEach(([ky, ent]) => {
+        Object.entries(loaded).forEach(([ky, entry]) => {
+          const ent = entry;
           if (typeof ent === 'function' && ent && typeof ent.prototype === 'object') {
             const srcPath = fl.split(this.srcPath).pop().split(sep);
             const sLogger = new Logger(
               join(this.outDirPath, ...srcPath),
-              srcPath.join(sep), basename(fl),
+              srcPath.join(sep), ky,
             );
             Object.getOwnPropertyNames(ent).forEach((prop) => {
               if (Generator.ignoredStaticMethods.indexOf(prop) === -1) {
