@@ -12,6 +12,7 @@ import { clone as cloneBuiltIn, isBuiltIn } from '../builtin/builtin';
 class DeepExtender {
   /**
    * the delete key - if found, that value must be removed from root. whether its array or object
+   * @member {String}
    * @static
    *
    * @example
@@ -22,6 +23,7 @@ class DeepExtender {
 
   /**
    * the rep key - the next record will be as it is as given.
+   * @member {String}
    * @static
    *
    * @example
@@ -36,7 +38,9 @@ class DeepExtender {
    * @param {String} [repKey] - replace the next item, used in array
    */
   constructor(delKey = DeepExtender.DelKey, repKey = DeepExtender.RepKey) {
+    /** @member {String} */
     this.delKey = delKey;
+    /** @member {String} */
     this.repKey = repKey;
   }
 

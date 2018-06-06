@@ -11,11 +11,13 @@ import { Pojo } from './pojo';
   */
 class Walker {
   /* the max depth upto which walking will be done
+   * @member {Number}
    * @static
    */
   static MaxObjDepth = 99;
 
   /* the end symbol, to stop walking more in depth
+   * @member {String}
    * @static
    */
   static EndVar = '$W_END';
@@ -26,7 +28,9 @@ class Walker {
    * @param {String} [endVar=$W_END] - the end symbol to stop the walk
    */
   constructor(depth = Walker.MaxObjDepth, endVar = Walker.EndVar) {
+    /** @member {String} */
     this.endVar = endVar;
+    /** @member {Number} */
     this.depth = depth;
   }
 
