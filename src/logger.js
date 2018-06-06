@@ -64,16 +64,18 @@ class FileLogger {
   /**
    * The log handler, for all the test cases
    * @param {String} method - the method to be called
+   * @param {Boolean} construct - whether the method call is a constructor
    * @param {Object} inInstance - the input instance
    * @param {*} inputParams - the input parameters array
    * @param {*} output - the output value
    */
-  log(method, inInstance, inputParams, output) {
+  log(method, construct, inInstance, inputParams, output) {
     this.updateWriter();
     const str = JSON.stringify({
       require: inInstance,
       request: {
         payload: inputParams,
+        construct
         method,
       },
       output,
