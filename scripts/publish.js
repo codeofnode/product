@@ -12,8 +12,9 @@ if (conf.module && typeof conf.module.dependencies === 'object') {
   const baseBr = exec('git symbolic-ref --short HEAD').toString().trim();
   const dps = Object.entries(conf.module.dependencies);
   for (let z = 0; z < dps.length; z++) {
+    const [ky,vl] = dps[z];
     exec(`git checkout ${ky}-v${vl}`);
-    const exactVersion = JSON.parse(fs.readFileSync('./package.json').toString()).version;
+    const exactVersion = JSON.parse(readFileSync('./package.json').toString()).version;
     pkg.dependencies[ky] = `^${exactVersion}`;
   }
   exec(`git checkout ${baseBr}`);
