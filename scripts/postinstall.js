@@ -13,6 +13,10 @@ if (!deps.length) return;
 function resolveDeps(ind, cb) {
   if (ind === deps.length) return cb();
   const [ky, vl] = deps[ind];
+  const diffRep = exec('git diff').toString();
+  if (diffRep.indexOf('package.json') !== -1) {
+    exec('git commit -am "package.json new line fix"');
+  }
   exec(`git checkout ${ky}-v${vl}`);
   exec('node scripts/postinstall');
   exec('npm run build');
