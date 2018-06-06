@@ -16,9 +16,6 @@
     "allowImportExportEverywhere": false,
     "codeFrame": false
   },
-  "globals": {
-    "appImport": true
-  },
   "rules": {
     "babel/new-cap": 1,
     "babel/no-invalid-this": 1,
