@@ -12,7 +12,7 @@ A unit test case generator. It will intercept the methods of class and save the 
 # How to use ?
 #### install it
 ```
-    npm install tcgen
+npm install --save-dev tcgen
 ```
 #### create a json configuation, and save it to a file
 ```json
@@ -44,10 +44,14 @@ TCGEN_CONFIG_PATH=/my/config/path node my-node-app.js
 ### use it
 Somewhere in your application, but before initializing any class.
 ```javascript
-require('tcgen')
+if (process.env.ENV !== 'production') { // on production we should not load this
+  require('tcgen')
+}
 ```
 
 Or if you don't want to use env variable
 ```javascript
-new (require('tcgen'))(theConfigDefinedAbove)
+if (process.env.ENV !== 'production') { //
+  new (require('tcgen'))(theConfigDefinedAbove)
+}
 ```
