@@ -55,9 +55,9 @@ class Executor {
         this.outputHandler(null, ...args);
         resolve(...args);
       };
-      const rejecting = (...args) => {
-        this.outputHandler(...args);
-        reject(...args);
+      const rejecting = (er) => {
+        this.outputHandler(er);
+        reject(er);
       };
       let ret;
       let prevCb;
