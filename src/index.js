@@ -25,11 +25,11 @@ class Generator {
 
   /**
    * Create an instance of Import Manager class
-   * @param {String} srcPath - the path where source exists
-   * @param {String[]} noClassFiles - the files that are not classes
-   * @param {String} outPath - the path where test cases will be written
+   * @param {String} [srcPath=`process.cwd()`] - the path where source exists, defaults to process.cwd()
+   * @param {String[]} [noClassFiles=[]] - the files that are not classes
+   * @param {String} [outPath=`join(tmpdir, name)`] - the path where test cases will be written
    */
-  constructor(srcPath, noClassFiles = [], outPath = join(tmpdir, name)) {
+  constructor(srcPath = process.cwd(), noClassFiles = [], outPath = join(tmpdir, name)) {
     this.srcPath = srcPath;
     const sp = resolvePath(srcPath);
     const op = resolvePath(outPath);
