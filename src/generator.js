@@ -62,16 +62,15 @@ class Generator {
     return file.endsWith('.js') && this.noClassFiles.indexOf(file) === -1
   }
 
-  static exec()
-
   /**
    * Act as the middlemap to intercept the function under test
    * @param {Function} sLogger - the logger function
-   * @param {Function} oldFunc - the old function
+   * @param {*} ent - the input instance
+   * @param {String} prop - method name belongs to ent
    * @param {Boolean} isConstructor - whether the function is constructor
    * @return {Function} the new function that will be used
    */
-  static handleFunctionUnderTest(sLogger, oldFunc, isConstructor = false) {
+  static handleFunctionUnderTest(sLogger, ent, prop, isConstructor = false) {
     /**
      * This becomes the original function
      * @param {...*} args - the arguments passed to be function
