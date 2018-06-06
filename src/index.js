@@ -1,13 +1,14 @@
-import { mkdirSync, readdirSync, statSync } from 'fs';
-import { join, basename, sep, isAbsolute } from 'path';
+import { mkdirSync } from 'fs';
+import { join, basename, sep } from 'path';
 import { tmpdir } from 'os';
 import { name } from './package.json';
-import Logger from './logger';
+import { Logger } from './logger';
 import appImport from './appImport';
 
 const { clonePrimitive } = appImport('petu/obj/pojo').Pojo;
 const { Walker } = appImport('petu/fs/walk');
-const { Executor } = appImport('petu/func/exec').Executor;
+const resolvePath = appImport('petu/path/resolvePath').default;
+const { Executor } = appImport('petu/func/exec');
 
 /**
  * @module generator
@@ -30,10 +31,8 @@ class Generator {
    */
   constructor(srcPath, noClassFiles = [], outPath = join(tmpdir, name)) {
     this.srcPath = srcPath;
-    let sp = srcPath;
-    let op = outPath;
-    if (!isAbsolute(sp)) sp = join(process.cwd(), sp);
-    if (!isAbsolute(op)) op = join(process.cwd(), op);
+    const sp = resolvePath(srcPath);
+    const op = resolvePath(outPath);
     const outDirName = sp.split(sep).slice(-3).join('-');
     this.outDirPath = join(op, outDirName);
     try {
@@ -57,7 +56,7 @@ class Generator {
     } catch (er) {
       // ignore
     }
-    return file.endsWith('.js') && this.noClassFiles.indexOf(file) === -1
+    return file.endsWith('.js') && this.noClassFiles.indexOf(file) === -1;
   }
 
   /**
@@ -82,7 +81,7 @@ class Generator {
      * This becomes the original function
      * @param {...*} args - the arguments passed to be function
      */
-    return function(...args) {
+    return function (...args) {
       executor.exec(...args);
       return executor.returnValue;
     };
@@ -99,16 +98,20 @@ class Generator {
         Object.entries(loaded).forEach(([ky, ent]) => {
           if (typeof ent === 'function' && ent && typeof ent.prototype === 'object') {
             const srcPath = fl.split(this.srcPath).pop().split(sep);
-            const sLogger = new Logger(join(this.outDirPath, ...srcPath),
-              srcPath.join(sep), basename(fl));
+            const sLogger = new Logger(
+              join(this.outDirPath, ...srcPath),
+              srcPath.join(sep), basename(fl),
+            );
             Object.getOwnPropertyNames(ent).forEach((prop) => {
               if (Generator.ignoredStaticMethods.indexOf(prop) === -1) {
                 ent[prop] = Generator.handleFunctionUnderTest(sLogger, ent[prop].bind(ent));
               }
             });
             Object.getOwnPropertyNames(ent.prototype).forEach((prop) => {
-              ent.prototype[prop] = Generator.handleFunctionUnderTest(sLogger,
-                ent.prototype[prop].bind(ent.prototype), prop === 'constructor');
+              ent.prototype[prop] = Generator.handleFunctionUnderTest(
+                sLogger,
+                ent.prototype[prop].bind(ent.prototype), prop === 'constructor',
+              );
             });
           }
         });
@@ -117,4 +120,18 @@ class Generator {
   }
 }
 
-export default Generator;
+module.exports = Generator;
+
+if (process.env.TCGEN_CONFIG_PATH) {
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  const tcgenConfig = require(resolvePath(process.env.TCGEN_CONFIG_PATH));
+  const generator = new Generator(
+    tcgenConfig.srcPath,
+    tcgenConfig.noClassFiles || [],
+    tcgenConfig.outpath || join(tmpdir, name),
+  );
+  generator.load();
+  exports.default = generator;
+}
+
+// export default Generator;
