@@ -1,3 +1,5 @@
+import { Pojo } from './pojo';
+
 /**
  * @module assigner
  */
@@ -7,7 +9,12 @@
   * @class
   */
 class Assigner {
-  static baseTypes = ['string', 'number', 'boolean', 'undefined'];
+  /*
+   * The basic types that can be considered as primitive
+   * @static
+   *
+   */
+  static baseTypes = Pojo.baseTypes;
 
   /**
    * Update one object given the another patch object.

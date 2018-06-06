@@ -1,9 +1,6 @@
 
 import { clone as cloneBuiltIn, isBuiltIn } from '../builtin/builtin';
 
-let DEL_KEY = '$del';
-let REP_KEY = '$rep';
-
 /**
  * @module deepExtender
  */
@@ -15,38 +12,32 @@ let REP_KEY = '$rep';
 class DeepExtender {
   /**
    * the delete key - if found, that value must be removed from root. whether its array or object
+   * @static
+   *
    * @example
    * // returns [0,2];
    * deepExtend([0,1,2],[0,'$del',2]);
    */
-  static get DelKey() {
-    return DEL_KEY;
-  }
+  static DelKey = '$del';
 
   /**
    * the rep key - the next record will be as it is as given.
+   * @static
+   *
    * @example
    * // returns [[],1,2];
    * deepExtend([{},1,2],['$rep',[]]);
    */
-  static get RepKey() {
-    return REP_KEY;
-  }
+  static RepKey = '$rep';
 
-  /*
-   * Set the del key
-   * @param {string} vl - the new del key
+  /**
+   * Create an instance of DeepExtender class
+   * @param {String} [delKey] - the delete key, if to remove from root
+   * @param {String} [repKey] - replace the next item, used in array
    */
-  static set DelKey(vl) {
-    DEL_KEY = vl;
-  }
-
-  /*
-   * Set the rep key
-   * @param {string} vl - the new del key
-   */
-  static set RepKey(vl) {
-    REP_KEY = vl;
+  constructor(delKey = DeepExtender.DelKey, repKey = DeepExtender.RepKey) {
+    this.delKey = delKey;
+    this.repKey = repKey;
   }
 
   /**
@@ -55,7 +46,7 @@ class DeepExtender {
    * @param {Object[]} def - the default, source array
    * @return {Object[]} the cloned array
    */
-  static deepCloneArray(arr, def) {
+  deepCloneArray(arr, def) {
     let ln = arr.length;
     const clone = new Array(ln);
     const defln = Array.isArray(def) ? def.length : 0;
@@ -66,7 +57,7 @@ class DeepExtender {
     for (let on = 0, minus = 0, item, z = 0, defi; z < ln; z += 1, on += 1) {
       item = arr[z];
       defi = z - minus;
-      if (clone[on - 1] === DeepExtender.RepKey) {
+      if (clone[on - 1] === this.repKey) {
         clone[on] = item;
         on -= 1;
         clone.splice(on, 1);
@@ -74,22 +65,22 @@ class DeepExtender {
         if (defi < defln && Array.isArray(def)) {
           clone[on] = (typeof def[defi] !== 'object' || def[defi] === null)
             ? def[defi]
-            : DeepExtender.deepExtend({}, def[defi]);
+            : this.deepExtend({}, def[defi]);
         }
-      } else if (item === DeepExtender.DelKey) {
+      } else if (item === this.delKey) {
         clone.splice(on, 1);
         on -= 1;
-      } else if (item === DeepExtender.RepKey) {
+      } else if (item === this.repKey) {
         clone[on] = arr[z];
         ln += 1;
         minus += 1;
       } else if (typeof item === 'object') {
         if (Array.isArray(item)) {
-          clone[on] = DeepExtender.deepCloneArray(item, def[defi] && def[defi]);
+          clone[on] = this.deepCloneArray(item, def[defi] && def[defi]);
         } else if (isBuiltIn(item)) {
           clone[on] = cloneBuiltIn(item);
         } else {
-          clone[on] = DeepExtender.deepExtend(Array.isArray(def) && typeof def[defi] === 'object' ? def[defi] : {}, item);
+          clone[on] = this.deepExtend(Array.isArray(def) && typeof def[defi] === 'object' ? def[defi] : {}, item);
         }
       } else {
         clone[on] = item;
@@ -110,7 +101,7 @@ class DeepExtender {
    * @param {...Object} args - n number of arguments
    * @return {Object} the extended and new target
    */
-  static deepExtend(...args) {
+  deepExtend(...args) {
     if (args.length < 1 || typeof args[0] !== 'object') {
       return false;
     }
@@ -129,7 +120,7 @@ class DeepExtender {
       }
 
       if (Array.isArray(target) && Array.isArray(obj)) {
-        target = DeepExtender.deepCloneArray(obj, target);
+        target = this.deepCloneArray(obj, target);
         return;
       }
 
@@ -141,25 +132,25 @@ class DeepExtender {
           // recursion prevention
           // ignore
 
-        } else if (val === DeepExtender.DelKey) {
+        } else if (val === this.delKey) {
           delete target[key];
 
         /**
          * if new value isn't object then just overwrite by new value
          * instead of extending.
          */
-        } else if ((typeof val !== 'object') || (val[DeepExtender.RepKey] === DeepExtender.RepKey)) {
+        } else if ((typeof val !== 'object') || (val[this.repKey] === this.repKey)) {
           if (typeof val === 'object') {
-            delete val[DeepExtender.RepKey];
+            delete val[this.repKey];
           }
           target[key] = val;
 
         // just clone arrays (and recursive clone objects inside)
         } else if (Array.isArray(val)) {
-          if (val[0] === DeepExtender.OverKey) {
+          if (val[0] === this.repKey) {
             target[key] = val.slice(1);
           } else {
-            target[key] = DeepExtender.deepCloneArray(val, target[key]);
+            target[key] = this.deepCloneArray(val, target[key]);
           }
 
         // custom cloning and overwrite for specific objects
@@ -168,11 +159,11 @@ class DeepExtender {
 
         // overwrite by new value if source isn't object or array
         } else if (typeof src !== 'object' || src === null || Array.isArray(src)) {
-          target[key] = DeepExtender.deepExtend({}, val);
+          target[key] = this.deepExtend({}, val);
 
         // source value and new value is objects both, extending...
         } else {
-          target[key] = DeepExtender.deepExtend(src, val);
+          target[key] = this.deepExtend(src, val);
         }
       });
     });
@@ -180,5 +171,6 @@ class DeepExtender {
   }
 }
 
-export default DeepExtender.deepExtend;
+const extender = new DeepExtender();
+export default extender.deepExtend.bind(extender);
 export { DeepExtender };
