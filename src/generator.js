@@ -7,7 +7,7 @@ import appImport from './appImport';
 
 const { clonePrimitive } = appImport('petu/obj/pojo').Pojo;
 const { Walker } = appImport('petu/fs/walk');
-const exec = appImport('petu/func/exec');
+const { Executor } = appImport('petu/func/exec').Executor;
 
 /**
  * @module generator
@@ -21,7 +21,6 @@ const exec = appImport('petu/func/exec');
 class Generator {
   static ignoredStaticMethods = ['length', 'prototype', 'name'];
   static clonePrimitive = clonePrimitive;
-  static exec = exec;
 
   /**
    * Create an instance of Import Manager class
@@ -71,20 +70,21 @@ class Generator {
    */
   static handleFunctionUnderTest(sLogger, ent, prop, isConstructor = false) {
     const applyArgs = [prop, isConstructor, Generator.clonePrimitive(ent), args];
+    const executor = new Executor(ent, prop, (err, ...data) => {
+      if (err) {
+        applyArgs.push({ error: Generator.clonePrimitive(err) });
+      } else {
+        applyArgs.push({ output: Generator.clonePrimitive(data.length > 1 ? data : data[0]) });
+      }
+      sLogger.apply(sLogger, applyArgs);
+    }, isConstructor);
     /**
      * This becomes the original function
      * @param {...*} args - the arguments passed to be function
      */
     return function(...args) {
-      const ret = exec(ent, prop, args, (err, ...data) => {
-        if (err) {
-          applyArgs.push({ error: Generator.clonePrimitive(err) });
-        } else {
-          applyArgs.push({ output: Generator.clonePrimitive(data.length > 1 ? data : data[0]) });
-        }
-        sLogger.apply(sLogger, applyArgs);
-      }, isConstructor);
-      return ret;
+      executor.exec(...args);
+      return executor.returnValue;
     };
   }
 
