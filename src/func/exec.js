@@ -8,12 +8,25 @@
   * @class
   */
 class Executor {
+  /*
+   * a simplet method to initialize and execute a function
+   * @param {Object} context - the input instance or context
+   * @param {String} method - the method name to call
+   * @param {*} params - the parameters passed to the function
+   * @param {Boolean} [construct=false] - whether to construct or not
+   * @param {Boolean} [isAsync] - whether its async or not
+   * @return {Promise} the promise that resolves with the output data or reject with thrown error
+   */
+  static exec(context, method, params, construct = false, isAsync) {
+    return (new Executor(context, method, construct, isAsync)).execute(...params);
+  }
+
   /**
    * Create an instance of Executor class
    * @param {Object} context - the input instance or context
    * @param {String} method - the method name to call
    * @param {Boolean} [construct=false] - whether to construct or not
-   * @param {Boolean} [isAsync=false] - whether its async or not
+   * @param {Boolean} [isAsync] - whether its async or not
    */
   constructor(context, method, construct = false, isAsync) {
     /** @member */
