@@ -43,9 +43,8 @@ class Generator {
     } catch (er) {
       // nothing to do
     }
-    this.filelist = Generator.walk(sp);
     const walker = new Walker(true, this.ifFileToCapture.bind(this));
-    this.walk = walker.walk.bind(walker);
+    this.filelist = walker.walk(sp);
   }
 
   /**
@@ -71,13 +70,13 @@ class Generator {
    * @return {Function} the new function that will be used
    */
   static handleFunctionUnderTest(sLogger, ent, prop, isConstructor = false) {
+    const applyArgs = [prop, isConstructor, Generator.clonePrimitive(ent), args];
     /**
      * This becomes the original function
      * @param {...*} args - the arguments passed to be function
      */
     return function(...args) {
-      const applyArgs = [prop, isConstructor, Generator.clonePrimitive(ent), args];
-      const ret = oldFunc(...args);
+      const ret = exec(this, prop, args, isConstructor);
       applyArgs.push({
         output: Generator.clonePrimitive(ret)
       });
