@@ -1,5 +1,5 @@
 {
-  "name": "unit-tc-gen",
+  "name": "tcgen",
   "version": "0.0.0",
   "description": "A unit test case generator. It will intercept the methods of class and save the input and out to file.",
   "scripts": {
