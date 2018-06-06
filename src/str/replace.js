@@ -26,52 +26,61 @@ const generateMethodRegex = (startVar, endVar) =>
  * @module templist
  */
 
-const START_VAR = '{{';
-const END_VAR = '}}';
-
 /**
   * The Templist class
   * @class
   */
 class Templist {
-  static startVar = START_VAR;
-  static endVar = END_VAR;
-  static svarLen = START_VAR.length;
-  static evarLen = END_VAR.length;
+  /* the start variable pattern
+   * @static
+   */
+  static startVar = '{{';
+
+  /* the end variable pattern
+   * @static
+   */
+  static endVar = '}}';
+
+  /* the function key, that will ask to call the linked method
+   * @static
+   */
   static funcKey = '@';
+
+  /* the debug function, helpful to debug if something went wrong with method call
+   * @static
+   */
   static debugFunc = noop;
+
+  /* what data to be sent in case of any error
+   * @static
+   */
   static valOnMethodError = 'METHOD_ERROR';
-  static varRegex = generateVarRegex(START_VAR, END_VAR);
-  static functionRegex = generateMethodRegex(START_VAR, END_VAR);
 
   /**
-   * [Re-] Initialize the static values of the Templist class
-   * @param {Object} opts - object that accepts properties to modify the static value
+   * initialize an instance of Templist class
+   * @param {Object} opts - object that accepts properties to that will act as config for templist
+   * @param {String} opts.startVar - the start variable
+   * @param {String} opts.envVar - the end variable
+   * @param {String} opts.funcKey - the function key
+   * @param {RegExp} opts.varRegex - the variable regex
+   * @param {RegExp} opts.functionRegex - the function regex
+   * @param {Function} opts.debugFunc - the debug function
+   * @param {String} opts.valOnMethodError - what value to be resolved in case of method failure
    */
-  static initConfig(opts) {
-    Object.enteries(opts).forEach(([ky, vl]) => {
-      switch (ky) {
-        case 'startVar':
-          Templist.startVar = vl;
-          Templist.svarLen = vl.length;
-          Templist.varRegex = generateVarRegex(vl, Templist.endVar);
-          break;
-        case 'endVar':
-          Templist.endVar = vl;
-          Templist.evarLen = vl.length;
-          Templist.functionRegex = generateMethodRegex(Templist.startVar, vl);
-          break;
-        case 'funcKey':
-        case 'varRegex':
-        case 'debugFunc':
-        case 'valOnMethodError':
-        case 'functionRegex':
-          Templist[ky] = vl;
-          break;
-        default:
-          break;
-      }
-    });
+  constructor(opts) {
+    Object.assign(this, {
+      startVar: Templist.startVar,
+      endVar: Templist.endVar,
+      funcKey: Templist.funcKey,
+      varRegex: Templist.varRegex,
+      functionRegex: Templist.functionRegex,
+      debugFunc: Templist.debugFunc,
+      valOnMethodError: Templist.valOnMethodError,
+    }, opts);
+    this.svarLen = this.startVar.length;
+    this.evarLen = this.endVar.length;
+    this.varRegex = generateVarRegex(this.startVar, this.endVar);
+    this.functionRegex = generateMethodRegex(this.startVar, this.endVar);
   }
 
   /**
@@ -88,10 +97,10 @@ class Templist {
    * @param {String} st - the input string
    * @return {Boolean} if the string having a variable
    */
-  static isWithVars(st) {
-    if (st && typeof st === 'string' && st.length > (Templist.evarLen + Templist.svarLen)) {
-      const f = st.indexOf(Templist.startVar);
-      const l = st.indexOf(Templist.endVar);
+  isWithVars(st) {
+    if (st && typeof st === 'string' && st.length > (this.evarLen + this.svarLen)) {
+      const f = st.indexOf(this.startVar);
+      const l = st.indexOf(this.endVar);
       return (f !== -1 && l !== -1) ? [f, l] : false;
     } return false;
   }
@@ -103,17 +112,17 @@ class Templist {
    * @param {Object} methods - the methods object
    * @return {Object} the modified input object
    */
-  static handleFunction(inp, vars, methods) {
-    if (typeof inp === 'object' && inp && Templist.funcKey) {
-      if (typeof methods === 'object' && (typeof inp[Templist.funcKey] === 'string') &&
-        Templist.isAlphaNum(inp[Templist.funcKey]) && (typeof methods[inp[Templist.funcKey]] === 'function')) {
+  handleFunction(inp, vars, methods) {
+    if (typeof inp === 'object' && inp && this.funcKey) {
+      if (typeof methods === 'object' && (typeof inp[this.funcKey] === 'string') &&
+        Templist.isAlphaNum(inp[this.funcKey]) && (typeof methods[inp[this.funcKey]] === 'function')) {
         const pms = (typeof inp.params === 'object' && inp.params !== null) ? assign(null, inp.params) : inp.params;
-        let params = Templist.replace(pms, vars, methods);
+        let params = this.replace(pms, vars, methods);
         if (!(Array.isArray(params))) {
           params = [params];
         }
         params.unshift(vars, methods);
-        return methods[inp[Templist.funcKey]].apply(null, params);
+        return methods[inp[this.funcKey]].apply(null, params);
       }
     }
     return inp;
@@ -136,7 +145,7 @@ class Templist {
    * @param {Object} variablesMap - the variables map
    * @return {*} the resolved value
    */
-  static getVarVal(varVal, varName, variablesMap) {
+  getVarVal(varVal, varName, variablesMap) {
     if (typeof variablesMap !== 'object' || variablesMap === null) return varVal;
     if (hasProp(variablesMap, varName)) {
       return variablesMap[varName];
@@ -146,12 +155,12 @@ class Templist {
       const ln = spls.length;
       let valFound = true;
       if (ln) {
-        let base = Templist.getVarVal(spls[0], spls[0], variablesMap);
+        let base = this.getVarVal(spls[0], spls[0], variablesMap);
         for (let j = 1; j < ln; j++) {
           if (spls[j].length) {
             if (typeof base === 'object') {
               const curVal = (spls[j] === '$' && Array.isArray(base))
-                ? Templist.getVarVal(spls[j], spls[j], variablesMap) : spls[j];
+                ? this.getVarVal(spls[j], spls[j], variablesMap) : spls[j];
               try {
                 base = base[curVal];
               } catch (er) {
@@ -169,7 +178,7 @@ class Templist {
     }
     return hasProp(variablesMap, varName)
       ? variablesMap[varName]
-      : Templist.noUndefined(varVal);
+      : this.noUndefined(varVal);
   }
 
   /**
@@ -179,13 +188,13 @@ class Templist {
    * @param {*} varValue - the variable value
    * @return {String} the resolved string value
    */
-  static replaceVariable(str, varName, varValue) {
+  replaceVariable(str, varName, varValue) {
     if (str === varName) return varValue;
     const strType = typeof varValue === 'string';
     const ln = str.length;
     const patt = (strType ||
-      (str.indexOf(Templist.startVar) !== 0 ||
-        str.indexOf(Templist.endVar) !== (ln - Templist.evarLen)))
+      (str.indexOf(this.startVar) !== 0 ||
+        str.indexOf(this.endVar) !== (ln - this.evarLen)))
       ? varName : `"${varName}"`;
     const rValue = strType ? varValue : JSON.stringify(varValue);
     return str.replace(patt, () => rValue);
@@ -196,8 +205,8 @@ class Templist {
    * @param {String} variable - the variable string
    * @return {String} the extracted variable
    */
-  static extractVarName(variable) {
-    return variable.substring(Templist.evarLen, variable.length - Templist.evarLen);
+  extractVarName(variable) {
+    return variable.substring(this.evarLen, variable.length - this.evarLen);
   }
 
   /**
@@ -209,20 +218,20 @@ class Templist {
    *                              if a variable in method format
    * @return {String} the replaced final string
    */
-  static replaceVariables(strg, vars, variablesMap, methodsMap) {
+  replaceVariables(strg, vars, variablesMap, methodsMap) {
     let str = strg;
     let varName;
     let replaced;
     let wasString;
     for (let i = 0; i < vars.length; i++) {
-      varName = Templist.extractVarName(vars[i]);
-      replaced = Templist.getVarVal(vars[i], varName, variablesMap, methodsMap);
+      varName = this.extractVarName(vars[i]);
+      replaced = this.getVarVal(vars[i], varName, variablesMap, methodsMap);
       if (replaced !== vars[i]) {
         wasString = typeof replaced === 'string';
-        replaced = Templist.replace(replaced, variablesMap, methodsMap);
+        replaced = this.replace(replaced, variablesMap, methodsMap);
         if (wasString && typeof replaced !== 'string') replaced = JSON.stringify(replaced);
       }
-      str = Templist.replaceVariable(str, vars[i], replaced);
+      str = this.replaceVariable(str, vars[i], replaced);
     }
     return str;
   }
@@ -232,22 +241,22 @@ class Templist {
    * @param {String} str - the input string
    * @return {String[]} the array of variables extracted
    */
-  static extractVars(str) {
-    const ar = str.match(Templist.varRegex) || [];
+  extractVars(str) {
+    const ar = str.match(this.varRegex) || [];
     let ln = ar.length;
     for (let zi = 0, sps, sl; zi < ln; zi++) {
-      if (ar[zi].indexOf(Templist.endVar + Templist.startVar) !== -1) {
-        sps = ar[zi].split(Templist.endVar + Templist.startVar);
+      if (ar[zi].indexOf(this.endVar + this.startVar) !== -1) {
+        sps = ar[zi].split(this.endVar + this.startVar);
         sl = sps.length;
         for (let zj = 0; zj < sl; zj++) {
           if (zj) {
             if (zj === sl - 1) {
-              sps[zj] = Templist.startVar + sps[zj];
+              sps[zj] = this.startVar + sps[zj];
             } else {
-              sps[zj] = Templist.startVar + sps[zj] + Templist.endVar;
+              sps[zj] = this.startVar + sps[zj] + this.endVar;
             }
           } else {
-            sps[zj] += Templist.endVar;
+            sps[zj] += this.endVar;
           }
         }
         ar.splice.bind(ar, zi, 1).apply(ar, sps);
@@ -263,8 +272,8 @@ class Templist {
    * @param {String} str - the input string
    * @return {String[]} the array of methods variables extracted
    */
-  static extractMethods(str) {
-    return str.match(Templist.functionRegex) || [];
+  extractMethods(str) {
+    return str.match(this.functionRegex) || [];
   }
 
   /**
@@ -272,8 +281,8 @@ class Templist {
    * @param {String} methodDec - then method description
    * @return {String} method name extracted
    */
-  static extractMethodName(methodDec) {
-    return methodDec.substring(Templist.svarLen, methodDec.indexOf('('));
+  extractMethodName(methodDec) {
+    return methodDec.substring(this.svarLen, methodDec.indexOf('('));
   }
 
   /**
@@ -341,10 +350,10 @@ class Templist {
    * @param {String} methodName - the method name linked
    * @return {*} array of parameters extracted
    */
-  static extractMethodParams(methodDec, methodName) {
+  extractMethodParams(methodDec, methodName) {
     const baseDec = methodDec.substring(
-      methodName.length + Templist.svarLen + 1,
-      methodDec.length - (Templist.evarLen + 1),
+      methodName.length + this.svarLen + 1,
+      methodDec.length - (this.evarLen + 1),
     ).trim();
     return Templist.extractParameters(baseDec, methodName);
   }
@@ -357,12 +366,12 @@ class Templist {
    * @param {Object} methodsMap - the methods map used to find the method name
    * @return {*} the value found from method call
    */
-  static invokeMethod(method, params, methodName, methodsMap) {
+  invokeMethod(method, params, methodName, methodsMap) {
     try {
       return method.apply(methodsMap, params);
     } catch (eri) {
-      Templist.debugFunc(eri);
-      return Templist.valOnMethodError;
+      this.debugFunc(eri);
+      return this.valOnMethodError;
     }
   }
 
@@ -374,9 +383,9 @@ class Templist {
    * @param {Object} methodsMap - the methods map used to find the method name
    * @return {*} the value found from method call
    */
-  static getMethodValue(methodDec, methodName, method, methodsMap) {
-    const methodParams = Templist.extractMethodParams(methodDec, methodName);
-    return Templist.invokeMethod(method, methodParams, methodName, methodsMap);
+  getMethodValue(methodDec, methodName, method, methodsMap) {
+    const methodParams = this.extractMethodParams(methodDec, methodName);
+    return this.invokeMethod(method, methodParams, methodName, methodsMap);
   }
 
   /**
@@ -388,8 +397,8 @@ class Templist {
    * @param {Object} methodsMap - the methods map used to find the method name
    * @return {String} the replaced string out of method invoking
    */
-  static replaceMethod(str, methodDec, methodName, method, methodsMap) {
-    const methodValue = Templist.getMethodValue(methodDec, methodName, method, methodsMap);
+  replaceMethod(str, methodDec, methodName, method, methodsMap) {
+    const methodValue = this.getMethodValue(methodDec, methodName, method, methodsMap);
     if (str === methodDec) return methodValue;
     return str.replace(methodDec, () => methodValue);
   }
@@ -401,13 +410,13 @@ class Templist {
    * @param {Object} methodsMap - the methods map used to find the method name
    * @return {String} the replaced string out of method replacement
    */
-  static replaceMethods(strg, methods, methodsMap) {
+  replaceMethods(strg, methods, methodsMap) {
     let methodName = '';
     let str = strg;
     for (let i = 0; i < methods.length; i++) {
-      methodName = Templist.extractMethodName(methods[i]);
+      methodName = this.extractMethodName(methods[i]);
       if (methodsMap && typeof methodsMap[methodName] === 'function') {
-        str = Templist.replaceMethod(
+        str = this.replaceMethod(
           str, methods[i], methodName,
           methodsMap[methodName], methodsMap,
         );
@@ -423,15 +432,15 @@ class Templist {
    * @param {Object} methods - the methods map
    * @return {String} the replaced string out of variable and method replacement
    */
-  static replaceString(inp, vars, methods) {
+  replaceString(inp, vars, methods) {
     let input = inp;
     let str;
     while (typeof input === 'string' && str !== input) {
       str = input;
-      input = Templist.replaceVariables(input, Templist.extractVars(input), vars, methods);
+      input = this.replaceVariables(input, this.extractVars(input), vars, methods);
     }
     if (typeof input !== 'string') return input;
-    return Templist.replaceMethods(input, Templist.extractMethods(input), methods);
+    return this.replaceMethods(input, this.extractMethods(input), methods);
   }
 
   /**
@@ -443,14 +452,14 @@ class Templist {
    * @param {String} key - the key against which value is found
    * @param {Object} par - the parent object
    */
-  static visitValue(vars, methods, valn, key, par) {
+  visitValue(vars, methods, valn, key, par) {
     const rt = par;
     if (hasProp(rt, key)) {
       let val = rt[key];
       let tmpKy = null;
-      let isth = Templist.isWithVars(key);
+      let isth = this.isWithVars(key);
       if (isth) {
-        tmpKy = Templist.replaceString(key, vars, methods);
+        tmpKy = this.replaceString(key, vars, methods);
         if (tmpKy !== key) {
           val = rt[key];
           rt[tmpKy] = val;
@@ -458,12 +467,12 @@ class Templist {
         }
       }
       if (typeof val === 'string' && val) {
-        isth = Templist.isWithVars(val);
+        isth = this.isWithVars(val);
         if (isth) {
-          rt[tmpKy || key] = Templist.replaceString(val, vars, methods);
+          rt[tmpKy || key] = this.replaceString(val, vars, methods);
         }
       } else {
-        rt[tmpKy || key] = Templist.handleFunction(val, vars, methods);
+        rt[tmpKy || key] = this.handleFunction(val, vars, methods);
       }
     }
   }
@@ -477,16 +486,17 @@ class Templist {
    * @param {Object} methods - the methods map
    * @return {*} the replaced value out of variable and method replacement
    */
-  static replace(inp, vars, methods) {
+  replace(inp, vars, methods) {
     let input = inp;
     if (typeof input !== 'object' || !input) {
-      return Templist.replaceString(input, vars, methods);
+      return this.replaceString(input, vars, methods);
     }
-    input = Templist.handleFunction(input, vars, methods);
-    objwalk(Templist.visitValue.bind(undefined, vars, methods), null, input);
+    input = this.handleFunction(input, vars, methods);
+    objwalk(this.visitValue.bind(undefined, vars, methods), null, input);
     return input;
   }
 }
 
-export default Templist.replace;
+const templist = new Templist();
+export default templist.replace.bind(templist);
 export { Templist };

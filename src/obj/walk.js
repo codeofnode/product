@@ -1,5 +1,5 @@
 
-import { isDict } from './pojo';
+import { Pojo } from './pojo';
 
 /**
  * @module walker
@@ -10,8 +10,25 @@ import { isDict } from './pojo';
   * @class
   */
 class Walker {
+  /* the max depth upto which walking will be done
+   * @static
+   */
   static MaxObjDepth = 99;
+
+  /* the end symbol, to stop walking more in depth
+   * @static
+   */
   static EndVar = '$W_END';
+
+  /**
+   * Create an instance of walker instance
+   * @param {Number} [depth=99] - depth upto which we need to walk, in order to avoid recursion
+   * @param {String} [endVar=$W_END] - the end symbol to stop the walk
+   */
+  constructor(depth = Walker.MaxObjDepth, endVar = Walker.EndVar) {
+    this.endVar = endVar;
+    this.depth = depth;
+  }
 
   /**
    * decides if its end of obj walk, can be customized as per needs
@@ -19,10 +36,12 @@ class Walker {
    * @param {Number} depth - depth of obj from main first object passed
    * @return {Boolean} whether end is reached
    */
-  static ifEndForObjWalk(obj, depth) {
-    return ((depth < Walker.MaxObjDepth && typeof obj === 'object'
-      && obj !== null && obj[Walker.EndVar] !== true
-      && isDict(obj)) ? obj : false);
+  ifEndForObjWalk(obj, depth) {
+    return (
+      depth < this.depth &&
+      Pojo.isPojo(obj, { allowNull: false, allowPrim: false }) &&
+      obj[this.endVar] !== true
+    ) ? obj : false;
   }
 
   /**
@@ -35,19 +54,20 @@ class Walker {
    * @param {Boolean} isLast - whether the key is last key of object
    * @return {Object} the modified or original object
    */
-  static walk(fun, rt, obj, key, depth = 0, isLast) {
+  walk(fun, rt, obj, key, depth = 0, isLast) {
     fun(obj, key, rt, depth, typeof isLast === 'boolean' ? isLast : true);
-    const ob = Walker.ifEndForObjWalk(obj, depth);
+    const ob = this.ifEndForObjWalk(obj, depth);
     if (ob) {
       const kys = Object.keys(ob);
       const lastln = kys.length - 1;
       const deep = depth + 1;
-      for (let z = 0; z <= lastln; z += 1) {
-        Walker.objwalk(fun, ob, ob[kys[z]], kys[z], deep, (z === lastln));
+      for (let z = 0; z <= lastln; z++) {
+        this.walk(fun, ob, ob[kys[z]], kys[z], deep, (z === lastln));
       }
     }
   }
 }
 
-export default Walker.walk;
+const walker = new Walker();
+export default walker.walk.bind(walker);
 export { Walker };
