@@ -21,14 +21,11 @@ class Manager {
   /**
    * initialize or loads a module
    * @param {String} mod - name of the module
-   * @param {...*} [opts] - options to initialize the module with
    * @return {Object} the instance the module
    */
-  load(mod, ...opts) {
+  load(mod) {
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    let ToRet = require(`${this.modulePrefix}${mod}`);
-    if (opts.length) ToRet = new ToRet(...opts);
-    return ToRet;
+    return require(`${this.modulePrefix}${mod}`);
   }
 }
 
