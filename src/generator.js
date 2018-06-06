@@ -76,11 +76,14 @@ class Generator {
      * @param {...*} args - the arguments passed to be function
      */
     return function(...args) {
-      const ret = exec(this, prop, args, isConstructor);
-      applyArgs.push({
-        output: Generator.clonePrimitive(ret)
-      });
-      sLogger.apply(sLogger, applyArgs);
+      const ret = exec(ent, prop, args, (err, ...data) => {
+        if (err) {
+          applyArgs.push({ error: Generator.clonePrimitive(err) });
+        } else {
+          applyArgs.push({ output: Generator.clonePrimitive(data.length > 1 ? data : data[0]) });
+        }
+        sLogger.apply(sLogger, applyArgs);
+      }, isConstructor);
       return ret;
     };
   }
