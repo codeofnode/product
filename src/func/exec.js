@@ -15,7 +15,7 @@ class Executor {
    * @param {Boolean} [construct=false] - whether to construct or not
    * @param {Boolean} [isAsync=false] - whether its async or not
    */
-  constructor(context, method, construct = false, isAsync = false) {
+  constructor(context, method, construct = false, isAsync) {
     /** @member */
     this.context = context;
     /** @member {String} */
