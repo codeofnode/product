@@ -33,5 +33,7 @@ class Manager {
 }
 
 const manager = (new Manager((pkg.config && pkg.config.modulePrefix) || ''));
-global.appImport = manager.load.bind(manager);
-export default Manager;
+const appImport = manager.load.bind(manager);
+
+export default appImport;
+export { Manager };
