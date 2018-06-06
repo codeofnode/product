@@ -3,6 +3,9 @@ import { join, basename, sep, isAbsolute } from 'path';
 import { tmpdir } from 'os';
 import { name } from './package.json';
 import Logger from './logger';
+import appImport from './appImport';
+
+const { clonePrimitive } = appImport('petu/obj/pojo').Pojo;
 
 /**
  * @module generator
@@ -17,6 +20,7 @@ class Generator {
   static ignoredStaticMethods = ['length', 'prototype', 'name'];
   static ignoredProtoMethods = ['constructor'];
   static primitiveTypes = ['number', 'null', 'string', 'boolean'];
+  static clonePrimitive = clonePrimitive;
 
   /**
    * clone a object upto nth level, for primitives properties
