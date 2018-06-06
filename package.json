@@ -12,9 +12,10 @@
     "lint": "./node_modules/.bin/eslint --fix src",
     "struct": "npm start -- --struct",
     "preinstall": "node scripts/preinstall.js",
-    "publish": "npm run build && cp -r dist publish && node scripts/publish.js",
+    "pub": "npm run build && cp -r dist publish && node scripts/publish.js",
     "postinstall": "node scripts/postinstall.js"
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/codeofnode/product.git"
