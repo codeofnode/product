@@ -6,6 +6,7 @@ import Logger from './logger';
 import appImport from './appImport';
 
 const { clonePrimitive } = appImport('petu/obj/pojo').Pojo;
+const { Walker } = appImport('petu/fs/walk');
 
 /**
  * @module generator
