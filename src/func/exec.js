@@ -83,6 +83,7 @@ class Executor {
         } else {
           ret = method.apply(this.context, payload);
         }
+        this.returnValue = ret;
       } catch (er) {
         return rejecting(er);
       }
