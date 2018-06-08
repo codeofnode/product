@@ -31,7 +31,10 @@
     "dirName": "modules",
     "path": "{{srcDir}}/{{module.dirName}}",
     "prefix": "product-",
-    "dependencies": {}
+    "dependencies": {
+      "petu": 2,
+      "json2server": 1
+    }
   },
   "config": {
     "modulePrefix": "{{module.prefix}}"
