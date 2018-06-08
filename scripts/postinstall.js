@@ -1,6 +1,7 @@
 const exec = require('child_process').execSync;
 const mv = require('mv');
 const symlink = require('fs').symlinkSync;
+const { sync as rimrafSync } from 'rimraf'
 
 const pkg = require('../package.json');
 let conf = require('./conf');
@@ -20,6 +21,7 @@ function resolveDeps(ind, cb) {
   exec(`git checkout ${ky}-v${vl}`);
   exec('node scripts/postinstall');
   exec('npm run build');
+  rimrafSync(`node_modules/${conf.module.prefix}${ky}`);
   mv('dist', `node_modules/${conf.module.prefix}${ky}`, {mkdirp: true}, function(err) {
     if (err) throw err;
     const mod = require(`${conf.module.prefix}${ky}/package.json`);
