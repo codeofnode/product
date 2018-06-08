@@ -28,7 +28,7 @@
     "path": "{{srcDir}}/{{module.dirName}}",
     "prefix": "product-",
     "dependencies": {
-      "petu": 1
+      "petu": 2
     }
   },
   "config": {
