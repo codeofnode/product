@@ -1,7 +1,7 @@
 const exec = require('child_process').execSync;
 const mv = require('mv');
 const symlink = require('fs').symlinkSync;
-const { sync as rimrafSync } from 'rimraf'
+const rimrafSync = require('rimraf').sync
 
 const pkg = require('../package.json');
 let conf = require('./conf');
