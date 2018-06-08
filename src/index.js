@@ -120,6 +120,7 @@ class Generator {
         });
       }
     });
+    return this;
   }
 }
 
@@ -127,14 +128,16 @@ module.exports = Generator;
 
 if (process.env.TCGEN_CONFIG_PATH) {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const tcgenConfig = require(resolvePath(process.env.TCGEN_CONFIG_PATH));
-  const generator = new Generator(
+  let tcgenConfigs = require(resolvePath(process.env.TCGEN_CONFIG_PATH));
+  if (!Array.isArray(tcgenConfigs)) {
+    tcgenConfigs = [tcgenConfigs];
+  }
+  const generators = tcgenConfigs.map(tcgenConfig => (new Generator(
     tcgenConfig.srcPath,
     tcgenConfig.noClassFiles || [],
     tcgenConfig.outpath || join(tmpdir, name),
-  );
-  generator.load();
-  exports.default = generator;
+  ).load()));
+  exports.default = generators.length === 1 ? generators.pop() : generators;
 }
 
 // export default Generator;
