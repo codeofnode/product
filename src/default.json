@@ -1,0 +1,15 @@
+{
+  "filePath": "testsuite.json",
+  "steps": [],
+  "bail": 0,
+  "stacktrace": 0,
+  "timeout": 1000,
+  "whileInterval": 1000,
+  "type": "rest",
+  "debug": "",
+  "debugOnFail": "",
+  "vars": {},
+  "methods": {
+    "EVAL": ["a", "return eval(a)"]
+  }
+}

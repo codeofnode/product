@@ -1,7 +1,9 @@
+import EventEmitter from 'events';
+import { writeFileSync } from 'fs';
+import { resolve } from 'path';
 import TestSuite from './testsuite';
-import appImport from './appImport';
-
-const pick = appImport('petu/obj/pick').default;
+import default from './default.json';
+import appImport from '../appImport';
 
 /**
  * @module allrounder
@@ -12,44 +14,39 @@ const pick = appImport('petu/obj/pick').default;
   * @class
   */
 
-class Allrounder {
+class Allrounder extends EventEmitter {
   /**
-   * Create an instance of Extractor class
-   * @param {Object} conf - the config path or the options object
-   * @param {String[]} conf.testsuites the array of json files to test
-   * @param {String} conf.testsuites[].filePath the path of the json test suite file
-   * @param {Number[]} [conf.testsuites[].steps=[]] the test steps to execute
-   * @param {Number} [conf.bail=0] whether to bail on first failure
-   * @param {Number} [conf.stacktrace=0] whether to print stacktrace in case of failure
-   * @param {Number} [conf.timeout=1000] to set the default timeout
-   * @param {Number} [conf.whileInterval=1000] in case of while looping how much interval gap between test cases
-   * @param {String} [conf.type=rset] what kind of validation is it
-   * @param {String} [conf.debug=] what info to console all the tests
-   * @param {String} [conf.debugOnFail=] what info to console for failed test
-   * @param {Object} [conf.vars=] the input variable to start with
-   * @param {Object} [conf.mocha=] the mocha options to passed to mocha
+   * Create an instance of Allrounder class
+   * @param {Object} conf - the options object to initialize Allrounder
+   * @param {Object[]} [conf.testsuites] the array of test suite files to test
    * @param {String} [conf.outVarsPath=] save the vars to a file at end of test execution
    */
   constructor(conf) {
-    Object.assign(this, {
-      testsuites: [].map(ob => Object.assign({ filePath: '', steps: [] }, ob)),
-      bail: 0,
-      stacktrace: 0,
-      timeout: 1000,
-      whileInterval: 1000,
-      type: 'rest',
-      debug: '',
-      debugOnFail: '',
-      mocha: {},
-      vars: {},
-      outVarsPath: '',
-    }, conf);
+    super();
+    Object.assign(conf, default, conf);
+    let testsuites = (Array.isArray(conf.testsuites) ? conf.testsuites : [])
+      .map(ob => Object.assign({}, conf, ob, {
+        vars: Object.assign({}, conf.vars, ob.vars),
+        testsuites: undefined,
+        runnerOptions: undefined,
+        outVarsPath: undefined,
+      }));
+    this.vars = JSON.parse(JSON.stringify(conf.vars));
+    this.testsuites = testsuites;
+    if (typeof conf.outVarsPath === 'string') {
+      this.outVarsPath = resolve(conf.outVarsPath);
+    }
+    this.emit('initialized', conf);
   }
 
   /**
    * load the test cases
    */
   load() {
+    this.emit('loading');
+    this.testsuites.forEach(ts => (new TestSuite(this, ts)));
+    this.emit('loading-testsuites');
+    this.emit('loaded');
     return this;
   }
 
@@ -57,6 +54,8 @@ class Allrounder {
    * start the execution of test cases
    */
   start() {
+    this.emit('starting');
+    this.emit('started');
     return this;
   }
 
@@ -64,6 +63,20 @@ class Allrounder {
    * stop the execution of test cases
    */
   stop() {
+    this.emit('stopping');
+    this.save();
+    this.emit('stopped');
+    return this;
+  }
+
+  /**
+   * save the variables on the file
+   */
+  save() {
+    Object.assign(this.vars, ...this.testsuites.map(ts => ts.vars));
+    if (this.outVarsPath) {
+      writeFileSync(this.outVarsPath, JSON.stringify(this.vars, null, 2)+'\n');
+    }
     return this;
   }
 
@@ -71,6 +84,9 @@ class Allrounder {
    * end the execution of test cases
    */
   end() {
+    this.emit('ending');
+    this.save();
+    this.emit('ended');
     return this;
   }
 }
@@ -79,7 +95,7 @@ module.exports = Allrounder;
 
 if (process.env.ALLROUNDER_CONFIG_PATH) {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  const config = require(resolvePath(process.env.ALLROUNDER_CONFIG_PATH));
+  const config = require(resolve(process.env.ALLROUNDER_CONFIG_PATH));
   const allrounder = new Allrounder(config);
   generator.load().start();
   exports.default = allrounder;
