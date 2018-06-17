@@ -32,6 +32,9 @@ class Allrounder extends EventEmitter {
         outVarsPath: undefined,
       }));
     this.vars = JSON.parse(JSON.stringify(conf.vars));
+    if (typeof this.dir === 'undefined') {
+      this.dir = process.cwd();
+    }
     this.testsuites = testsuites;
     if (typeof conf.outVarsPath === 'string') {
       this.outVarsPath = resolve(conf.outVarsPath);

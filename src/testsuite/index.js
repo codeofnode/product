@@ -1,9 +1,11 @@
 import { readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
 import default from '../default.json';
+import TestCase from '../testcase';
 import appImport from '../appImport';
 
 const { isDict } = appImport('petu/obj/pojo').Pojo;
+const stringify = appImport('petu/str/stringify');
 
 const TSCacheMap = {};
 
@@ -20,7 +22,7 @@ class TestSuite {
   /**
    * Create an instance of TestSuite class
    * @param {Allrounder} runner - the allrounder runner instance
-   * @param {Object} conf - the options object
+   * @param {Object} conf - the configuration object
    * @param {Number[]} [conf.steps=[]] the test steps to execute
    * @param {Number} [conf.bail=0] whether to bail on first failure
    * @param {Number} [conf.stacktrace=0] whether to print stacktrace in case of failure
@@ -30,8 +32,9 @@ class TestSuite {
    * @param {String} [conf.debug=] what info to console all the tests
    * @param {String} [conf.debugOnFail=] what info to console for failed test
    * @param {Object} [conf.vars=] the input variable to start with
+   * @param {Object} [options={}] - the options object
    */
-  constructor(runner, conf) {
+  constructor(runner, conf, options = {}) {
     Object.assign(this, default, conf);
     if (typeof this.methods === 'string') {
       this.methods = require(resolve(meth));
@@ -49,11 +52,14 @@ class TestSuite {
     }
     this.runner = runner;
     this.dir = dirname(this.filePath);
-    runner.once('loading-testsuites', this.load.bind(this));
-    runner.once('loaded', this.afterAllLoaded.bind(this));
-    runner.on('starting', this.start.bind(this));
-    runner.on('stopping', this.stop.bind(this));
-    runner.once('end', this.end.bind(this));
+    this.jsonVarsString = stringify(this.vars);
+    if (options.listenEvents === false) {
+      runner.once('loading-testsuites', this.load.bind(this));
+      runner.once('loaded', this.afterAllLoaded.bind(this));
+      runner.on('starting', this.start.bind(this));
+      runner.on('stopping', this.stop.bind(this));
+      runner.once('end', this.end.bind(this));
+    }
   }
 
   /**
@@ -66,19 +72,16 @@ class TestSuite {
   getTSData(dir, fileName, filePath) {
     const key = filePath ? resolve(filePath) : resolve(join(dir, fileName));
     if (!Object.prototype.hasOwnProperty.call(TSCacheMap, key)) {
-      const str = readFileSync(resolvePath(key)).toString();
+      const str = readFileSync(resolve(key)).toString();
       let json = JSON.parse(str);
-      let methods = {};
-      try {
-        const mths = require(resolvePath(key.split('.').slice(0, -1).join('.')));
-        if (isDict(mths)) methods = mths;
-      } catch (er) {
-        this.runner.emit('warning', 10, 'method_not_found', er);
-      }
       if (Array.isArray(json)) {
         json = { tests: json };
+      } else if (isDict(json)) {
+        json = { tests: [json] };
       }
-      json.methods = methods;
+      if (!Array.isArray(json.tests)) {
+        json.tests = [json.test || json.tests];
+      }
       TSCacheMap[key] = json;
     }
     return TSCacheMap[key];
@@ -99,8 +102,7 @@ class TestSuite {
     if (Array.isArray(json.tests)) {
       this.tests = json.tests;
     }
-    Object.assign(this.vars, json.vars);
-    Object.assign(this.methods, json.methods);
+    Object.assign(this.vars, JSON.parse(this.jsonVarsString));
     const tl = this.tests.length;
     const tests = this.tests;
     for (let z = 0; z < tl; z++) {
@@ -183,4 +185,4 @@ class TestSuite {
   }
 }
 
-export default TestCase;
+export default TestSuite;
