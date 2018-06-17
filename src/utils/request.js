@@ -3,6 +3,7 @@ import { request as HttpsRequest } from 'https';
 import { parse as urlParse } from 'url';
 import { ReadStream } from 'fs';
 import { warn } from './logger';
+import appImport from '../appImport';
 
 const { isDict } = appImport('petu/obj/pojo').Pojo;
 const stringify = appImport('petu/str/stringify');
