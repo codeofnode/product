@@ -13,7 +13,7 @@ const secIndexStr = readFileSync('./scripts/static/section.js').toString();
 try {
   secs.forEach(sec => writeFileSync(`./dist/${sec}/index.js`, secIndexStr, { flag: 'wx' }));
 } catch (er) {
-  console.warn(er);
+  if (er.errno !== -17) throw er;
 }
 
 writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2)+'\n');
