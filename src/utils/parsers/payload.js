@@ -1,9 +1,9 @@
 import querystring from 'querystring';
 import { config } from '../../package.json';
-import { warn } from '../logger';
 import appImport from '../../appImport';
 
 const { fillToLast, lastValue } = appImport('petu/obj/lastValue').LastMan;
+const { warn } = appImport('petu/obj/lastValue').default;
 
 /**
   * The payload parser class
