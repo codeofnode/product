@@ -1,1 +1,4 @@
-export { default, PayloadParser } from './payload';
+import payload from './payload';
+export { PayloadParser } from './payload';
+
+export default payload
