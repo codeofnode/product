@@ -15,6 +15,9 @@
     "pub": "npm run build && rm -r publish && cp -r dist publish && node scripts/publish.js",
     "postinstall": "node scripts/postinstall.js"
   },
+  "bin": {
+    "json2server": "./bin/index.js"
+  },
   "private": true,
   "repository": {
     "type": "git",
