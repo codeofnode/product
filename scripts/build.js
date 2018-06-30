@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 import pkg from '../package.json';
 import { sync as rimrafSync } from 'rimraf'
 
@@ -14,6 +14,7 @@ delete pkg.scripts;
 delete pkg.nyc;
 delete pkg.babel;
 
+const secIndexStr = readFileSync('./scripts/static/section.js').toString();
 if (isServer) {
   const serverJson = require('../src/server.json');
   serverJson.$ = { name: pkg.name, version: pkg.version }
@@ -33,3 +34,8 @@ if (isServer) {
 }
 
 writeFileSync('dist/package.json', JSON.stringify(pkg, null, 2)+'\n');
+try {
+  writeFileSync('./dist/utils/index.js', secIndexStr, { flag: 'wx' });
+} catch (er) {
+  if (er.errno !== -17) throw er;
+}
