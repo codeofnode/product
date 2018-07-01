@@ -2,6 +2,28 @@
   "app": {
     "port": 3000,
     "protocol": "http",
+    "module": {
+      "var": {
+        "file": "vars.json",
+        "key": "$__vars"
+      },
+      "spec": {
+        "file": "spec.json",
+        "key": "$__spec"
+      },
+      "method": {
+        "file": "index.js",
+        "key": "$__methods"
+      }
+    },
     "rootDir": "root"
+  },
+  "params": {
+    "body": {
+    },
+    "query": {
+    },
+    "path": {
+    }
   }
 }

@@ -10,18 +10,24 @@ const { warn } = appImport('petu/logger').default;
   * @class
   */
 class PayloadParser {
-  static parse(req) {
-    return (new PayloadParser(req)).parse();
+  /**
+   * Create an instance of payload parser
+   * @param {IncommingMessage} req - the incoming request
+   */
+  static parse(args) {
+    return (new PayloadParser(...args)).parse();
   }
 
   /**
    * Create an instance of payload parser
    * @param {IncommingMessage} req - the incoming request
+   * @param {String} ky - the key to store variables
    * @param {Function} [parser=JSON.parse] - the parser function
-   * @param {String} [ky=J2S_REQ_VARS_KEY] - the key to store variables
+   * @param {String} [ev=req-payload-parsed] - the parser function
    */
-  constructor(req, parser = JSON.parse, ky = process.env.J2S_REQ_VARS_KEY || config.reqVarsKey) {
-    this.vars = fillToLast(req, ky);
+  constructor(req, ky, parser = JSON.parse, ev = 'req-payload-parsed') {
+    this.vars = fillToLast(req, ky, 'params');
+    this.eventUponOver = ev;
     this.parser = parser;
     if (typeof parser !== 'function' &&
         lastValue(req, 'headers', 'content-type').toLowerCase().indexOf('form-urlencoded') !== -1) {
@@ -41,7 +47,7 @@ class PayloadParser {
       warn(er);
       this.vars.body = this.payloadc;
     }
-    this.req.emit('req-payload-parsed');
+    this.req.emit(this.eventUponOver);
     resolve(this.vars.body);
   }
 

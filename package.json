@@ -100,7 +100,6 @@
     "babel-runtime": "^6.26.0"
   },
   "config": {
-    "modulePrefix": "product-",
-    "reqVarsKey": "j2s"
+    "modulePrefix": "product-"
   }
 }
