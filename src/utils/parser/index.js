@@ -1,5 +1,4 @@
 import querystring from 'querystring';
-import { config } from '../../package.json';
 import appImport from '../../appImport';
 
 const { fillToLast, lastValue } = appImport('petu/obj/lastValue').LastMan;
@@ -40,7 +39,7 @@ class PayloadParser {
    * upon parsing is completed
    * @param {Function} resolve - the function which get called with parsed payload
    */
-  uponOver(resolve) {
+  onceOver(resolve) {
     try {
       this.vars.body = this.parser(this.payloadc);
     } catch (er) {

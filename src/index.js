@@ -1,5 +1,3 @@
-import http from 'http';
-import https from 'https';
 import { sep, join, resolve } from 'path';
 import defaultVars from './vars.json';
 import packageJson from './package.json';
@@ -24,12 +22,12 @@ class Json2Server {
    * @param {Object} vars - configuration to initiate the json2server instance
    */
   constructor(vars = {}) {
-    this._root = {};
+    this.root = {};
     Object.assign(this, packageJson.config);
     const allVars = this.resolveVars(vars);
     if (process.env.PORT) {
       const port = Number(process.env.port);
-      if (!isNaN(port) && port > 0) {
+      if (!Number.isNaN(port) && port > 0) {
         this.port = port;
         allVars.app.port = port;
       }
@@ -37,7 +35,7 @@ class Json2Server {
     if (this.loadAtInit !== false) {
       this.laod(allVars);
     } else {
-      this._allVars = allVars;
+      this.allVars = allVars;
     }
   }
 
@@ -67,16 +65,19 @@ class Json2Server {
     // eslint-disable-next-line global-require, import/no-dynamic-require
     const required = require(join(dir, file));
     const splits = dir.split(sep);
-    const modObj = fillToLast(this._root, ...splits);
-    const parentObj = lastValue(this._root, ...splits.slice(0, -1));
+    const modObj = fillToLast(this.root, ...splits);
+    const parentObj = lastValue(this.root, ...splits.slice(0, -1));
     const oldMethods = parentObj[this.module.method.key] || {};
     const oldVars = parentObj[this.module.var.key] || {};
-    switch(file) {
+    switch (file) {
       case this.module.var.file:
         modObj[this.module.var.key] = Object.assign({}, oldVars, this.resolveVars(required, vars));
         break;
       case this.module.method.file:
         modObj[this.module.method.key] = Object.assign({}, oldMethods, required);
+        break;
+      default:
+        // nothing to do
     }
     return false;
   }
@@ -88,11 +89,9 @@ class Json2Server {
   load(vars) {
     const fsWalk = new FsWalk(true, this.loadModule.bind(this, vars));
     fsWalk.walkSync(resolve(this.rootDir));
-    this._modules = requireAll({
-      dirname: ,
-      resolve() {
-      },
-    });
-    this.strVars = JSON.stringify(this._allVars);
+    this.modules = [];
+    this.strVars = JSON.stringify(this.allVars);
   }
 }
+
+export default Json2Server;

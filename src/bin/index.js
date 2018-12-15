@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 import Json2Server from '../index';
 
 let config = process.env.J2S_SERVER_CONFIG_PATH;
