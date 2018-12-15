@@ -24,6 +24,7 @@ class Json2Server {
    * @param {Object} vars - configuration to initiate the json2server instance
    */
   constructor(vars = {}) {
+    this._root = {};
     Object.assign(this, packageJson.config);
     const allVars = this.resolveVars(vars);
     if (process.env.PORT) {
@@ -68,8 +69,8 @@ class Json2Server {
     const splits = dir.split(sep);
     const modObj = fillToLast(this._root, ...splits);
     const parentObj = lastValue(this._root, ...splits.slice(0, -1));
-    const oldMethods = parentObj[this.module.method.key];
-    const oldVars = parentObj[this.module.var.key];
+    const oldMethods = parentObj[this.module.method.key] || {};
+    const oldVars = parentObj[this.module.var.key] || {};
     switch(file) {
       case this.module.var.file:
         modObj[this.module.var.key] = Object.assign({}, oldVars, this.resolveVars(required, vars));
@@ -85,7 +86,6 @@ class Json2Server {
    * @param {Object} vars - the all vars of current instance
    */
   load(vars) {
-    this._root = {};
     const fsWalk = new FsWalk(true, this.loadModule.bind(this, vars));
     fsWalk.walkSync(resolve(this.rootDir));
     this._modules = requireAll({
@@ -93,6 +93,6 @@ class Json2Server {
       resolve() {
       },
     });
-    this.strVars = JSON.stringify(allVars);
+    this.strVars = JSON.stringify(this._allVars);
   }
 }

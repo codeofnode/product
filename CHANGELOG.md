@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Changed
+  - Architectural changes
+  - API changes
+
 ## [0.1.28]  - 2018-02-03
 ### Changed
   - Replace method fixes
@@ -19,6 +24,7 @@ All notable changes to this project will be documented in this file.
   - Created and initialized the project
 
 
+  [Unreleased]: https://github.com/codeofnode/product/compare/json2server-v1...json2server-dev
   [0.1.28]: https://www.npmjs.com/package/json2server/v/0.1.28
   [0.1.0]: https://www.npmjs.com/package/json2server/v/0.1.0
   [0.0.0]: https://www.npmjs.com/package/json2server/v/0.0.1

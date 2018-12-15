@@ -1,5 +1,5 @@
-import { join, resolve } from 'path'
-import Json2Server from '../index'
+import { join, resolve } from 'path';
+import Json2Server from '../index';
 
 let config = process.env.J2S_SERVER_CONFIG_PATH;
 if (typeof config !== 'string') config = resolve(process.cwd(), 'vars.json');
