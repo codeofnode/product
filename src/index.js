@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import TestSuite from './testsuite';
-import default from './default.json';
+import defaultConf from './default.json';
 import appImport from '../appImport';
 
 /**
@@ -23,8 +23,8 @@ class Allrounder extends EventEmitter {
    */
   constructor(conf) {
     super();
-    Object.assign(conf, default, conf);
-    let testsuites = (Array.isArray(conf.testsuites) ? conf.testsuites : [])
+    Object.assign(conf, defaultConf, conf);
+    const testsuites = (Array.isArray(conf.testsuites) ? conf.testsuites : [])
       .map(ob => Object.assign({}, conf, ob, {
         vars: Object.assign({}, conf.vars, ob.vars),
         testsuites: undefined,
@@ -78,7 +78,7 @@ class Allrounder extends EventEmitter {
   save() {
     Object.assign(this.vars, ...this.testsuites.map(ts => ts.vars));
     if (this.outVarsPath) {
-      writeFileSync(this.outVarsPath, JSON.stringify(this.vars, null, 2)+'\n');
+      writeFileSync(this.outVarsPath, `${JSON.stringify(this.vars, null, 2)}\n`);
     }
     return this;
   }
@@ -94,14 +94,4 @@ class Allrounder extends EventEmitter {
   }
 }
 
-module.exports = Allrounder;
-
-if (process.env.ALLROUNDER_CONFIG_PATH) {
-  // eslint-disable-next-line global-require, import/no-dynamic-require
-  const config = require(resolve(process.env.ALLROUNDER_CONFIG_PATH));
-  const allrounder = new Allrounder(config);
-  generator.load().start();
-  exports.default = allrounder;
-}
-
-// export default Generator;
+export default Allrounder;

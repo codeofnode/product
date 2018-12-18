@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
-import default from '../default.json';
+import defaultConf from '../default.json';
 import appImport from '../appImport';
 import executors from '../executors';
 
@@ -32,7 +32,7 @@ class TestCase {
    * @param {Object} [options.runner] - if runner is passed it will listen to runner events else not
    */
   constructor(conf, options = {}) {
-    Object.assign(this, default, conf);
+    Object.assign(this, defaultConf, conf);
     if (typeof this.methods === 'string') {
       this.methods = require(resolve(meth));
     }

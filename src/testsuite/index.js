@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
-import default from '../default.json';
+import defaultConf from '../default.json';
 import TestCase from '../testcase';
 import appImport from '../appImport';
 
@@ -35,7 +35,7 @@ class TestSuite {
    * @param {Object} [options={}] - the options object
    */
   constructor(runner, conf, options = {}) {
-    Object.assign(this, default, conf);
+    Object.assign(this, defaultConf, conf);
     if (typeof this.methods === 'string') {
       this.methods = require(resolve(meth));
     }
@@ -53,7 +53,7 @@ class TestSuite {
     this.runner = runner;
     this.dir = dirname(this.filePath);
     this.jsonVarsString = stringify(this.vars);
-    if (options.listenEvents === false) {
+    if (options.listenEvents !== false) {
       runner.once('loading-testsuites', this.load.bind(this));
       runner.once('loaded', this.afterAllLoaded.bind(this));
       runner.on('starting', this.start.bind(this));
@@ -88,14 +88,14 @@ class TestSuite {
   }
 
   /**
-   * load the test cases
+   * free up load memory
    */
   afterAllLoaded() {
     delete TSCacheMap[resolve(this.filePath)];
   }
 
   /**
-   * free up load memory
+   * load the test cases
    */
   load() {
     const json = this.getTSData(this.dir, null, this.filePath);
@@ -167,6 +167,7 @@ class TestSuite {
    * start the execution of test cases
    */
   start() {
+    console.log(this)
     return this;
   }
 
