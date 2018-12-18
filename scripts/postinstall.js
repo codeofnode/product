@@ -27,6 +27,7 @@ function resolveDeps(ind, cb) {
     const mod = require(`${conf.module.prefix}${ky}/package.json`);
     if (typeof mod.bin === 'object') {
       for (const [bk, bv] of Object.entries(mod.bin)) {
+        rimrafSync(`node_modules/.bin/${bk}`);
         symlink(`node_modules/${conf.module.prefix}${ky}/${bv}`, `node_modules/.bin/${bk}`)
       }
     }
