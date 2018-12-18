@@ -2,7 +2,10 @@ import { readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
 import defaultConf from '../default.json';
 import appImport from '../appImport';
-import executors from '../executors';
+import requireDir from 'require-dir';
+
+const executors = requireDir('../executors')
+console.log(executors)
 
 const { isDict } = appImport('petu/obj/pojo').Pojo;
 const replace = appImport('petu/str/replace');
