@@ -5,8 +5,8 @@
   "scripts": {
     "start": "./node_modules/.bin/nodemon --watch src --exec \"./node_modules/.bin/babel-node ./node_modules/.bin/json2server -j src/server.json -r src -v src/vars.json\"",
     "build": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src -d dist && cp README.md dist/ && ./node_modules/.bin/babel-node scripts/build",
-    "prodtest": "npm test -- -v sutDir:dist",
-    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -b test",
+    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -v sutDir:dist -b test",
+    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/allrounder -v sutDir:src -b test",
     "all": "npm run lint && npm test && npm run build && npm run prodtest && npm run docs",
     "docs": "mkdir -p dist &&./node_modules/.bin/jsdoc -c .jsdoc.json",
     "lint": "./node_modules/.bin/eslint --fix src",
