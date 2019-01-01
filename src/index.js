@@ -3,7 +3,6 @@ import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 import TestSuite from './testsuite';
 import defaultConf from './default.json';
-import appImport from '../appImport';
 
 /**
  * @module allrounder
@@ -21,35 +20,42 @@ class Allrounder extends EventEmitter {
    * @param {Object[]} [conf.testsuites] the array of test suite files to test
    * @param {String} [conf.outVarsPath=] save the vars to a file at end of test execution
    */
-  constructor(conf) {
+  constructor(conf = {}) {
     super();
-    Object.assign(conf, defaultConf, conf);
+    conf = Object.assign({}, conf, defaultConf, conf);
+    this.emit('initializing', conf);
+    this.runnerVars = JSON.stringify(conf.vars);
     const testsuites = (Array.isArray(conf.testsuites) ? conf.testsuites : [])
-      .map(ob => Object.assign({}, conf, ob, {
-        vars: Object.assign({}, conf.vars, ob.vars),
+      .map(ob => Object.assign({}, conf, typeof ob === 'object' ? ob : {}, {
+        vars: Object.assign(JSON.parse(this.runnerVars), ob.vars),
         testsuites: undefined,
         runnerOptions: undefined,
         outVarsPath: undefined,
       }));
-    this.vars = JSON.parse(JSON.stringify(conf.vars));
     if (typeof this.dir === 'undefined') {
       this.dir = process.cwd();
     }
     this.testsuites = testsuites;
+    this.tsLength = this.testsuites.length;
     if (typeof conf.outVarsPath === 'string') {
       this.outVarsPath = resolve(conf.outVarsPath);
     }
+    this.nextTs = 0;
     this.emit('initialized', conf);
   }
 
   /**
-   * load the test cases
+   * load next test suite
    */
   load() {
-    this.emit('loading');
-    this.testsuites.forEach(ts => (new TestSuite(this, ts)));
-    this.emit('loading-testsuites');
-    this.emit('loaded');
+    if (this.nextTs < this.tsLength) {
+      this.emit('loading');
+      const ts = new TestSuite(this, this.testsuites[this.nextTs]);
+      ts.start();
+      this.nextTs = ts.next();
+    } else {
+      this.end();
+    }
     return this;
   }
 
@@ -57,8 +63,8 @@ class Allrounder extends EventEmitter {
    * start the execution of test cases
    */
   start() {
-    this.emit('starting');
-    this.emit('started');
+    this.stopped = false;
+    this.load();
     return this;
   }
 
@@ -67,8 +73,18 @@ class Allrounder extends EventEmitter {
    */
   stop() {
     this.emit('stopping');
-    this.save();
+    this.stopped = true;
     this.emit('stopped');
+    return this;
+  }
+
+  /**
+   * abort the execution of test cases
+   */
+  abort() {
+    this.emit('aborting');
+    this.save();
+    this.emit('aborted');
     return this;
   }
 
@@ -76,7 +92,7 @@ class Allrounder extends EventEmitter {
    * save the variables on the file
    */
   save() {
-    Object.assign(this.vars, ...this.testsuites.map(ts => ts.vars));
+    Object.assign({}, ...this.testsuites.map(ts => ts.vars));
     if (this.outVarsPath) {
       writeFileSync(this.outVarsPath, `${JSON.stringify(this.vars, null, 2)}\n`);
     }

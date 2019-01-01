@@ -1,0 +1,18 @@
+{
+  "type": "unit",
+  "tests" : [
+    {
+      "summary": "validating math sum",
+      "request": {
+        "method": "Math.sum",
+        "params": [
+          1,
+          2
+        ]
+      },
+      "assertions": {
+        "output": 3
+      }
+    }
+  ]
+}

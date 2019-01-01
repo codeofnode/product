@@ -1,11 +1,12 @@
+import EventEmitter from 'events';
 import { readFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
-import defaultConf from '../default.json';
 import TestCase from '../testcase';
 import appImport from '../appImport';
 
 const { isDict } = appImport('petu/obj/pojo').Pojo;
-const stringify = appImport('petu/str/stringify');
+const stringify = appImport('petu/str/stringify').default;
+const replace = appImport('petu/str/replace').default;
 
 const TSCacheMap = {};
 
@@ -18,7 +19,7 @@ const TSCacheMap = {};
   * @class
   */
 
-class TestSuite {
+class TestSuite extends EventEmitter {
   /**
    * Create an instance of TestSuite class
    * @param {Allrounder} runner - the allrounder runner instance
@@ -35,31 +36,17 @@ class TestSuite {
    * @param {Object} [options={}] - the options object
    */
   constructor(runner, conf, options = {}) {
-    Object.assign(this, defaultConf, conf);
-    if (typeof this.methods === 'string') {
-      this.methods = require(resolve(meth));
-    }
-    if (isDict(this.methods)) {
-      Object.keys(this.methods).forEach((meth) => {
-        if (Array.isArray(meth)) {
-          this.methods[meth] = new Function(...meth);
-        } else if (typeof meth !== 'function') {
-          delete this.methods[meth];
-        }
-      });
-    } else {
-      this.methods = {};
-    }
+    super();
+    Object.assign(this, conf);
+    TestCase.populateMethods(this)
     this.runner = runner;
     this.dir = dirname(this.filePath);
-    this.jsonVarsString = stringify(this.vars);
-    if (options.listenEvents !== false) {
-      runner.once('loading-testsuites', this.load.bind(this));
-      runner.once('loaded', this.afterAllLoaded.bind(this));
-      runner.on('starting', this.start.bind(this));
-      runner.on('stopping', this.stop.bind(this));
-      runner.once('end', this.end.bind(this));
-    }
+    this.suiteVars = stringify(this.vars);
+    runner.once('loading-testsuites', this.load.bind(this));
+    runner.once('loaded', this.afterAllLoaded.bind(this));
+    runner.on('starting', this.start.bind(this));
+    runner.on('stopping', this.stop.bind(this));
+    runner.once('end', this.end.bind(this));
   }
 
   /**
@@ -76,7 +63,11 @@ class TestSuite {
       let json = JSON.parse(str);
       if (Array.isArray(json)) {
         json = { tests: json };
-      } else if (isDict(json)) {
+      } else if (!isDict(json)) {
+        TSCacheMap[key] = { tests: [] };
+        return TSCacheMap[key]
+      }
+      if (!Array.isArray(json.tests) && !Array.isArray(json.test)) {
         json = { tests: [json] };
       }
       if (!Array.isArray(json.tests)) {
@@ -102,64 +93,55 @@ class TestSuite {
     if (Array.isArray(json.tests)) {
       this.tests = json.tests;
     }
-    Object.assign(this.vars, JSON.parse(this.jsonVarsString));
     const tl = this.tests.length;
     const tests = this.tests;
     for (let z = 0; z < tl; z++) {
       const steps = tests[z].steps;
-      if (typeof tests[z].import === 'string' && !replace(tests[z].disabled, Object.assign(fl.vars || {}, vars))) {
+      const vars = tests[z].vars || {}
+      if (typeof tests[z].import === 'string' && !replace(tests[z].disabled, Object.assign({}, vars, this.vars, vars))) {
         if (!tests[z].import.endsWith('.json')) {
           tests[z].import += '.json';
         }
-        let arp = getArp(options.jsondir, tests[z].import);
-        let ar = JSON.parse(arp[3]);
-        if (tests[z].fetchVars !== false) {
-          if (typeof ar.vars === 'object' && ar.vars !== null) {
-            fl.vars = Object.assign({}, ar.vars, fl.vars);
+        const tsjson = this.getTSData(this.dir, null, join(this.dir, tests[z].import));
+        if (tests[z].onlyVars !== false) {
+          if (typeof tsjson.vars === 'object' && tsjson.vars !== null) {
+            Object.assign(this.vars, tsjson.vars);
           }
-          if (typeof arp[2] === 'object' && arp[2] !== null) {
-            fa[2] = Object.assign({}, arp[2], fa[2]);
+          if (typeof tsjson.methods === 'object' && tsjson.methods !== null) {
+            Object.assign(this.methods, tsjson.methods);
           }
         }
-        if (tests[z].fetchVars === true) {
+        if (tests[z].onlyVars === true) {
           tests[z].disabled = true;
           continue;
         }
-        if (!Array.isArray(ar)) {
-          ar = getTests(ar);
-        }
-        if (Array.isArray(ar)) {
-          if (steps !== undefined) {
-            const art = [];
-            if (Array.isArray(steps)) {
-              steps.forEach(st => {
-                if (typeof st === 'number' && ar[st]) {
-                  let toPush = createNewStep(tests[z], getNthActiveElement(ar, st));
-                  if (toPush) art.push(toPush);
-                }
-              });
-            } else if (typeof steps === 'object' && steps !== null
-                && (typeof steps.from === 'number' || typeof steps.to === 'number')) {
-              let ffrom = getNthActiveElement(ar, steps.from || 0, true);
-              let fto = typeof steps.to !== 'number' ? ar.length - 1 : getNthActiveElement(ar, steps.to, true);
-              for (let st = ffrom; ar[st] && st <= fto; st++) {
-                let toPush = createNewStep(tests[z], ar[st]);
+        const art = [];
+        if (steps !== undefined) {
+          function addStep(z) {
+            if (typeof tsjson.tests[z] === 'object' && typeof tsjson.tests[z] !== null) {
+                let toPush = JSON.parse(JSON.stringify(tsjson.tests[z]));
                 if (toPush) art.push(toPush);
-              }
-            } else if (typeof steps === 'number' && ar[steps]) {
-              toPush = createNewStep(tests[z], getNthActiveElement(ar, steps));
-              if (toPush) art.push(toPush);
             }
-            ar = art;
-            tests.splice.bind(tests, z, 1).apply(tests, ar);
-          } else {
-            tests.splice.bind(tests, z, 1).apply(tests, ar.map(createNewStep.bind(null, tests[z])));
           }
-          ln += ar.length - 1;
-          z--;
+          if (Array.isArray(steps)) {
+            steps.forEach(addStep)
+          } else if (typeof steps === 'object' && steps !== null
+              && (typeof steps.from === 'number' || typeof steps.to === 'number')) {
+            for (let st = steps.from; st <= steps.to; st++) {
+              addStep(st)
+            }
+          } else if (typeof steps === 'number') {
+            addStep(steps)
+          }
+        } else {
+          art = tsjson.tests
         }
+        tests.splice.bind(tests, z, 1).apply(tests, art);
+        ln += art.length - 1;
+        z--;
       }
     }
+    tests.forEach(tc => (new TestCase(this, tc)));
     return this;
   }
 
@@ -167,7 +149,6 @@ class TestSuite {
    * start the execution of test cases
    */
   start() {
-    console.log(this)
     return this;
   }
 

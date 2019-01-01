@@ -101,6 +101,7 @@
     "babel-runtime": "^6.26.0",
     "commander": "^2.15.1",
     "jsonpath": "^1.0.0",
+    "mocha": "^5.2.0",
     "require-dir": "^1.2.0"
   },
   "config": {

@@ -1,10 +1,10 @@
 {
   "testsuites": ["test"],
   "filePath": "testcase.json",
-  "steps": [],
   "bail": 0,
   "stacktrace": 0,
-  "timeout": 1000,
+  "timeout": 2000,
+  "parallel": false,
   "whileInterval": 1000,
   "type": "rest",
   "debug": "",

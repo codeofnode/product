@@ -14,7 +14,7 @@ const { isDict } = appImport('petu/obj/pojo').Pojo;
   * @class
   */
 
-class TestCase {
+class RestExecutor {
   /**
    * Create an instance of TestCase class
    * @param {Object} conf - the configuration object
@@ -84,4 +84,4 @@ class TestCase {
   }
 }
 
-export default TestSuite;
+export default RestExecutor;

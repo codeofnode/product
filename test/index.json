@@ -7,8 +7,56 @@
         "method": "default",
         "construct": true
       },
+      "extractors": {
+        "allrounder": "output"
+      },
       "assertions": {
-        "this": {}
+        "error": null,
+        "output.testsuites.0.type": "rest"
+      }
+    },
+    {
+      "summary": "loading allrounder",
+      "require": "{{allrounder}}",
+      "request": {
+        "method": "load"
+      },
+      "extractors": {
+        "allrounder": "output"
+      },
+      "assertions": {
+        "output": null,
+        "error.code": "ENOENT"
+      }
+    },
+    {
+      "summary": "Constructor Valid",
+      "request": {
+        "method": "default",
+        "construct": true,
+        "params": {
+          "filePath": "test/rawdata/testcase.json"
+        }
+      },
+      "extractors": {
+        "allrounder": "output"
+      },
+      "assertions": {
+        "output.testsuites.0.type": "rest"
+      }
+    },
+    {
+      "summary": "loading allrounder",
+      "require": "{{allrounder}}",
+      "request": {
+        "method": "load"
+      },
+      "extractors": {
+        "allrounder": "output"
+      },
+      "assertions": {
+        "output": null,
+        "error": null
       }
     }
   ]

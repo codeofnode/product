@@ -5,10 +5,10 @@ import appImport from '../appImport';
 import requireDir from 'require-dir';
 
 const executors = requireDir('../executors')
-console.log(executors)
 
-const { isDict } = appImport('petu/obj/pojo').Pojo;
-const replace = appImport('petu/str/replace');
+const Pojo = appImport('petu/obj/pojo').Pojo;
+const replace = appImport('petu/str/replace').replace;
+const pick = appImport('petu/obj/pick').default;
 
 /**
  * @module testcase
@@ -20,40 +20,51 @@ const replace = appImport('petu/str/replace');
   */
 
 class TestCase {
-  /**
-   * Create an instance of TestCase class
-   * @param {Object} conf - the configuration object
-   * @param {Object} conf.testcase the test case to execute
-   * @param {Number} [conf.stacktrace=0] whether to print stacktrace in case of failure
-   * @param {Number} [conf.timeout=1000] to set the default timeout
-   * @param {Number} [conf.whileInterval=1000] in case of while looping how much interval gap between test cases
-   * @param {String} [conf.type=rest] what kind of validation is it
-   * @param {String} [conf.debug=] what info to console all the tests
-   * @param {String} [conf.debugOnFail=] what info to console for failed test
-   * @param {Object} [conf.vars=] the input variable to start with
-   * @param {Object} [options={}] - the options object
-   * @param {Object} [options.runner] - if runner is passed it will listen to runner events else not
+  /*
+   * to populate the methods out of configuration
+   * @param {Object} instance - the instance to which methods to be populated
+   * @static
    */
-  constructor(conf, options = {}) {
-    Object.assign(this, defaultConf, conf);
-    if (typeof this.methods === 'string') {
-      this.methods = require(resolve(meth));
+  static populateMethods(instance) {
+    if (typeof instance.methods === 'string') {
+      instance.methods = require(resolve(meth));
     }
-    if (isDict(this.methods)) {
-      Object.keys(this.methods).forEach((meth) => {
-        if (Array.isArray(meth)) {
-          this.methods[meth] = new Function(...meth);
-        } else if (typeof meth !== 'function') {
-          delete this.methods[meth];
+    if (Pojo.isDict(instance.methods)) {
+      Object.keys(instance.methods).forEach((meth) => {
+        const vl = instance.methods[meth]
+        if (Array.isArray(vl)) {
+          instance.methods[meth] = new Function(...vl);
+        } else if (typeof vl !== 'function') {
+          delete instance.methods[meth];
         }
       });
     } else {
-      this.methods = {};
+      instance.methods = {};
     }
+  }
+
+  /**
+   * Create an instance of TestCase class
+   * @param {TestSuite} runner - the testsuite runner instance
+   * @param {Object} tc - the tc configuration object
+   * @param {Object} tc.testcase the test case to execute
+   * @param {Number} [tc.stacktrace=0] whether to print stacktrace in case of failure
+   * @param {Number} [tc.timeout=1000] to set the default timeout
+   * @param {Number} [tc.whileInterval=1000] in case of while looping how much interval gap between test cases
+   * @param {String} [tc.type=rest] what kind of validation is it
+   * @param {String} [tc.debug=] what info to console all the tests
+   * @param {String} [tc.debugOnFail=] what info to console for failed test
+   * @param {Object} [tc.vars=] the input variable to start with
+   * @param {Object} [options={}] - the options object
+   */
+  constructor(runner, tc, options = {}) {
+    Object.assign(this, pick(runner, ...(Object.keys(runner).filter(ky => Pojo.baseTypes.indexOf(typeof runner[ky]) !== -1))));
+    Object.assign(this, tc);
+    this.vars = Object.assign({}, runner.vars, tc.vars)
+    this.methods = Object.assign({}, runner.methods, tc.methods)
+    this.constructor.populateMethods(this)
     this.result = {};
-    if (options.runner) {
-      this.listenToRunner(runner);
-    }
+    this.listenTo(runner);
   }
 
   /**
@@ -61,7 +72,6 @@ class TestCase {
    * @param {TestSuite} runner - the testsuite runner instance
    */
   listenTo(runner) {
-    this.runner = runner;
     runner.on('starting', this.start.bind(this));
     runner.on('stopping', this.stop.bind(this));
     runner.once('end', this.end.bind(this));
@@ -102,4 +112,4 @@ class TestCase {
   }
 }
 
-export default TestSuite;
+export default TestCase;
