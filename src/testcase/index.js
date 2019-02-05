@@ -8,6 +8,7 @@ const executors = requireDir('../executors')
 
 const Pojo = appImport('petu/obj/pojo').Pojo;
 const replace = appImport('petu/str/replace').replace;
+const cropString = appImport('petu/str/cropString').default;
 const pick = appImport('petu/obj/pick').default;
 
 /**
@@ -48,34 +49,21 @@ class TestCase {
    * @param {TestSuite} runner - the testsuite runner instance
    * @param {Object} tc - the tc configuration object
    * @param {Object} tc.testcase the test case to execute
-   * @param {Number} [tc.stacktrace=0] whether to print stacktrace in case of failure
-   * @param {Number} [tc.timeout=1000] to set the default timeout
    * @param {Number} [tc.whileInterval=1000] in case of while looping how much interval gap between test cases
    * @param {String} [tc.type=rest] what kind of validation is it
    * @param {String} [tc.debug=] what info to console all the tests
    * @param {String} [tc.debugOnFail=] what info to console for failed test
-   * @param {Object} [tc.vars=] the input variable to start with
+   * @param {Object} [tc.vars=] variables that will be used for replace
+   * @param {Object} [tc.methods=] functions that will be used for replace
    * @param {Object} [options={}] - the options object
    */
   constructor(runner, tc, options = {}) {
     Object.assign(this, pick(runner, ...(Object.keys(runner).filter(ky => Pojo.baseTypes.indexOf(typeof runner[ky]) !== -1))));
     Object.assign(this, tc);
-    this.vars = Object.assign({}, runner.vars, tc.vars)
+    this.vars = Object.assign(JSON.parse(runner.suiteVars), tc.vars)
     this.methods = Object.assign({}, runner.methods, tc.methods)
     this.constructor.populateMethods(this)
-    this.result = {};
-    this.listenTo(runner);
-  }
-
-  /**
-   * a function call to listen to runner events
-   * @param {TestSuite} runner - the testsuite runner instance
-   */
-  listenTo(runner) {
-    runner.on('starting', this.start.bind(this));
-    runner.on('stopping', this.stop.bind(this));
-    runner.once('end', this.end.bind(this));
-    return this;
+    this.runner = runner;
   }
 
   /**
@@ -86,29 +74,27 @@ class TestCase {
   }
 
   /**
+   * get the summary of test case
+   */
+  summary() {
+    const summ = this.summary || this.testcase || this.it || this.name;
+    return summ
+      ? this.replace(summ)
+      : this.request
+        ? cropString(this.request.url || this.request.payload || 'some unknown test')
+        : 'No Summary';
+  }
+
+  /**
    * start the execution of test cases
    */
-  start() {
+  exec(done) {
     this.executor = this.replace(this.type);
     if (Object.prototype.hasOwnProperty.call(executors, this.executor)) {
-      new (executors[this.executor])(exec);
+      new (executors[this.executor])(this, done);
     } else {
-      return this.end();
+      throw new Error('Allrounder: Executor not found.')
     }
-  }
-
-  /**
-   * stop the execution of test cases
-   */
-  stop() {
-    return this;
-  }
-
-  /**
-   * end the execution of test cases
-   */
-  end() {
-    return this;
   }
 }
 

@@ -1,14 +1,12 @@
 {
-  "testsuites": ["test"],
   "filePath": "testcase.json",
-  "bail": 0,
-  "stacktrace": 0,
-  "timeout": 2000,
   "parallel": false,
   "whileInterval": 1000,
   "type": "rest",
   "debug": "",
   "debugOnFail": "",
+  "runnerOptions": {
+  },
   "vars": {},
   "methods": {
     "EVAL": ["a", "return eval(a)"]
