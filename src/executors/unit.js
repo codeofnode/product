@@ -1,5 +1,5 @@
 import { sep, isAbsolute, join } from 'path';
-import JsonPath from 'jsonpath';
+import jsonqueryPath from 'jsonpath';
 import { Manager } from '../appImport';
 
 const CWD = process.cwd();
@@ -23,9 +23,25 @@ class Executor {
    * @param {String} queryPath - the json query path
    */
   static jsonquery(obj, queryPath) {
-    return JsonPath.query(obj, queryPath);
+    let res = obj;
+    if (typeof obj === 'object' && obj !== null) {
+      if (queryPath.indexOf('LEN()<') === 0) {
+        return jsonqueryPath.query(obj, queryPath.substring(6)).length;
+      } else if (typeof queryPath === 'string' && queryPath.indexOf('TYPEOF<') === 0) {
+        return (typeof jsonqueryPath.query(obj, queryPath.substring(7))[0]);
+      } else if (queryPath.indexOf('ARRAY<') === 0) {
+        return jsonqueryPath.query(obj, queryPath.substring(6));
+      } else if (queryPath.indexOf('<') === 5) {
+        const count = parseInt(queryPath.substr(0, 5), 10);
+        if (!Number.isNaN(count)) {
+          return jsonqueryPath.query(obj, queryPath.substring(6), count);
+        }
+      }
+      res = jsonqueryPath.query(obj, queryPath, 1);
+      res = (Array.isArray(res) && res.length < 2) ? res[0] : res;
+    }
+    return res;
   }
-
   /**
    * Create an instance of Executor class
    * @param {Object} testcase - the testcase instance
@@ -93,7 +109,10 @@ class Executor {
    * extracting the test case method
    */
   extractMethod(testcase) {
-    return Executor.jsonquery(this.context, this.replace(testcase.method));
+    return Executor.jsonquery(
+      this.context,
+      this.replace((testcase.execute || testcase.request).method),
+    );
   }
 
   /**

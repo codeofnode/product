@@ -4,14 +4,14 @@
     {
       "summary": "validating math sum",
       "request": {
-        "method": "Math.sum",
+        "method": "Math.pow",
         "params": [
-          1,
+          2,
           2
         ]
       },
       "assertions": {
-        "output": 3
+        "output": 4
       }
     }
   ]

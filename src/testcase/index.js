@@ -94,11 +94,12 @@ class TestCase {
    */
   exec() {
     const executor = this.replace(this.type);
-    if (Object.prototype.hasOwnProperty.call(executors, this.executor)) {
-      this.executor = new (executors[this.executor])(this);
+    if (Object.prototype.hasOwnProperty.call(executors, executor)) {
+      this.executor = new (executors[executor].default)(this);
       return this.executor.exec();
+    } else {
+      throw new Error('Allrounder: Executor not found.');
     }
-    throw new Error('Allrounder: Executor not found.');
   }
 
   /**

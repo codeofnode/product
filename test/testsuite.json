@@ -48,7 +48,7 @@
       },
       "assertions": {
         "error": null,
-        "output.tests": "rest"
+        "output": "rest"
       }
     },
     {
