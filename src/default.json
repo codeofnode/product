@@ -1,6 +1,5 @@
 {
   "filePath": "testcase.json",
-  "parallel": false,
   "whileInterval": 1000,
   "type": "rest",
   "debug": "",

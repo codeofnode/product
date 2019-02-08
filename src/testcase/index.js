@@ -1,13 +1,11 @@
-import { readFileSync } from 'fs';
-import { resolve, join, dirname } from 'path';
-import defaultConf from '../default.json';
-import appImport from '../appImport';
 import requireDir from 'require-dir';
+import { resolve } from 'path';
+import appImport, { Manager } from '../appImport';
 
-const executors = requireDir('../executors')
-
-const Pojo = appImport('petu/obj/pojo').Pojo;
-const replace = appImport('petu/str/replace').replace;
+const requireManager = new Manager('');
+const executors = requireDir('../executors');
+const { Pojo } = appImport('petu/obj/pojo');
+const replace = appImport('petu/str/replace').default;
 const cropString = appImport('petu/str/cropString').default;
 const pick = appImport('petu/obj/pick').default;
 
@@ -21,6 +19,8 @@ const pick = appImport('petu/obj/pick').default;
   */
 
 class TestCase {
+  /* eslint-disable no-param-reassign */
+
   /*
    * to populate the methods out of configuration
    * @param {Object} instance - the instance to which methods to be populated
@@ -28,13 +28,13 @@ class TestCase {
    */
   static populateMethods(instance) {
     if (typeof instance.methods === 'string') {
-      instance.methods = require(resolve(meth));
+      instance.methods = requireManager.load(resolve(instance.methods));
     }
     if (Pojo.isDict(instance.methods)) {
       Object.keys(instance.methods).forEach((meth) => {
-        const vl = instance.methods[meth]
+        const vl = instance.methods[meth];
         if (Array.isArray(vl)) {
-          instance.methods[meth] = new Function(...vl);
+          instance.methods[meth] = new Function(...vl); // eslint-disable-line no-new-func
         } else if (typeof vl !== 'function') {
           delete instance.methods[meth];
         }
@@ -43,6 +43,8 @@ class TestCase {
       instance.methods = {};
     }
   }
+
+  /* eslint-disable */
 
   /**
    * Create an instance of TestCase class
@@ -60,10 +62,12 @@ class TestCase {
   constructor(runner, tc, options = {}) {
     Object.assign(this, pick(runner, ...(Object.keys(runner).filter(ky => Pojo.baseTypes.indexOf(typeof runner[ky]) !== -1))));
     Object.assign(this, tc);
-    this.vars = Object.assign(JSON.parse(runner.suiteVars), tc.vars)
-    this.methods = Object.assign({}, runner.methods, tc.methods)
-    this.constructor.populateMethods(this)
+    this.vars = Object.assign(JSON.parse(runner.suiteVars), tc.vars);
+    this.methods = Object.assign({}, runner.methods, tc.methods);
+    this.abortFunction = this.abort.bind(this);
+    this.constructor.populateMethods(this);
     this.runner = runner;
+    this.runner.on('abort', this.abortFunction);
   }
 
   /**
@@ -81,20 +85,27 @@ class TestCase {
     return summ
       ? this.replace(summ)
       : this.request
-        ? cropString(this.request.url || this.request.payload || 'some unknown test')
+        ? cropString(this.request.url || 'some test')
         : 'No Summary';
   }
 
   /**
    * start the execution of test cases
    */
-  exec(done) {
-    this.executor = this.replace(this.type);
+  exec() {
+    const executor = this.replace(this.type);
     if (Object.prototype.hasOwnProperty.call(executors, this.executor)) {
-      new (executors[this.executor])(this, done);
-    } else {
-      throw new Error('Allrounder: Executor not found.')
+      this.executor = new (executors[this.executor])(this);
+      return this.executor.exec();
     }
+    throw new Error('Allrounder: Executor not found.');
+  }
+
+  /**
+   * abort the execution of test case
+   */
+  abort() {
+    return this.executor.abort();
   }
 }
 

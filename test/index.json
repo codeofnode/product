@@ -12,21 +12,22 @@
       },
       "assertions": {
         "error": null,
-        "output.testsuites.0.type": "rest"
+        "output.testsuites": [],
+        "output.nextTs": -1
       }
     },
     {
       "summary": "loading allrounder",
       "require": "{{allrounder}}",
       "request": {
-        "method": "load"
+        "method": "next"
       },
       "extractors": {
         "allrounder": "output"
       },
       "assertions": {
-        "output": null,
-        "error.code": "ENOENT"
+        "output.nextTs": 0,
+        "output.testsuites.length": 0
       }
     },
     {
@@ -35,7 +36,8 @@
         "method": "default",
         "construct": true,
         "params": {
-          "filePath": "test/rawdata/testcase.json"
+          "filePath": "test/rawdata/testcase.json",
+          "testsuites": ["testcase"]
         }
       },
       "extractors": {
@@ -46,17 +48,53 @@
       }
     },
     {
-      "summary": "loading allrounder",
+      "summary": "loading next test suite from allrounder",
       "require": "{{allrounder}}",
       "request": {
-        "method": "load"
+        "method": "next"
       },
       "extractors": {
         "allrounder": "output"
       },
       "assertions": {
-        "output": null,
-        "error": null
+        "output.nextTs": 0,
+        "output.testsuites.0.type": "rest"
+      }
+    },
+    {
+      "summary": "starting execution test cases",
+      "require": "{{allrounder}}",
+      "request": {
+        "method": "start"
+      },
+      "extractors": {
+        "allrounder": "output"
+      },
+      "assertions": {
+        "output.stopped": false
+      }
+    },
+    {
+      "summary": "stopping execution test cases",
+      "require": "{{allrounder}}",
+      "request": {
+        "method": "stop"
+      },
+      "extractors": {
+        "allrounder": "output"
+      },
+      "assertions": {
+        "output.stopped": true
+      }
+    },
+    {
+      "summary": "abort execution test cases",
+      "require": "{{allrounder}}",
+      "request": {
+        "method": "abort"
+      },
+      "extractors": {
+        "allrounder": "output"
       }
     }
   ]

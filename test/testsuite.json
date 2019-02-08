@@ -1,0 +1,91 @@
+{
+  "type": "unit",
+  "tests" : [
+    {
+      "summary": "Constructor",
+      "request": {
+        "method": "default",
+        "construct": true,
+        "params": [
+          {
+            "on": "{{EVAL('()=>{}')}}"
+          },
+          {
+            "filePath": "test/rawdata/testcase.json",
+            "vars": {}
+          }
+        ]
+      },
+      "extractors": {
+        "testsuite": "output"
+      },
+      "assertions": {
+        "error": null,
+        "output.stopped": false
+      }
+    },
+    {
+      "summary": "loading test suite",
+      "require": "{{testsuite}}",
+      "request": {
+        "method": "load"
+      },
+      "extractors": {
+        "testsuite": "output"
+      },
+      "assertions": {
+        "output.nextTc": -1
+      }
+    },
+    {
+      "summary": "loading next test case from testsuite",
+      "require": "{{testsuite}}",
+      "request": {
+        "method": "next"
+      },
+      "extractors": {
+        "testsuite": "output"
+      },
+      "assertions": {
+        "error": null,
+        "output.tests": "rest"
+      }
+    },
+    {
+      "summary": "starting execution test cases",
+      "require": "{{testsuite}}",
+      "request": {
+        "method": "start"
+      },
+      "extractors": {
+        "testsuite": "output"
+      },
+      "assertions": {
+        "output.stopped": false
+      }
+    },
+    {
+      "summary": "stopping execution test cases",
+      "require": "{{testsuite}}",
+      "request": {
+        "method": "stop"
+      },
+      "extractors": {
+        "testsuite": "output"
+      },
+      "assertions": {
+        "output.stopped": true
+      }
+    },
+    {
+      "summary": "abort execution test cases",
+      "require": "{{testsuite}}",
+      "request": {
+        "method": "abort"
+      },
+      "extractors": {
+        "testsuite": "output"
+      }
+    }
+  ]
+}
