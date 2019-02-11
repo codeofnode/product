@@ -47,8 +47,7 @@
         "testsuite": "output"
       },
       "assertions": {
-        "error": null,
-        "output": "rest"
+        "error": null
       }
     },
     {
@@ -61,7 +60,6 @@
         "testsuite": "output"
       },
       "assertions": {
-        "output.stopped": false
       }
     },
     {
@@ -74,7 +72,6 @@
         "testsuite": "output"
       },
       "assertions": {
-        "output.stopped": true
       }
     },
     {
