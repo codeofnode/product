@@ -25,3 +25,28 @@ master (latest version passed by QA)
 |
 |-- new-version (fork from master)
 ```
+
+# How to start for a project
+- Create a repo in git host, add readme, licsense, gitignore
+- Clone to local and tag with 0.0.0.
+- Push to origin
+- Create a issue in githost, eg the working poc
+- create three more branches: dev, v0, v0-i1
+- keep master, dev, v0, v0-i1 all in sync untill you have working poc
+- for 0.0.1, start with creating changelog, fill below
+
+```text
+# changelog
+Changes across the versions
+
+## [Unreleased]
+### Added
+- POC running basics
+
+## [0.0.0]  - 2019-02-19
+### Added
+- Started the project
+
+  [Unreleased]: https://github.com/codeofnode/product/compare/projectname-master...projectname-dev
+  [0.0.0]: https://github.com/codeofnode/projectname/tree/0.0.0
+```
